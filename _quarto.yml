@@ -3,7 +3,7 @@ project:
   output-dir: docs
   
 website:
-  title: "test1"
+  title: "Maximize"
   navbar:
     # logo: images/logo.png
     right:
@@ -14,12 +14,12 @@ website:
     left: 
       - href: index.qmd
         text: Home
-  #     - href: about.qmd
-  #       text: About me
-  # page-footer:
-  #   center: 
-  #     - text: "About"
-  #       href: about.qmd
+      - href: about.qmd
+        text: About me
+  page-footer:
+    center: 
+      - text: "About"
+        href: about.qmd
   #     - text: "License"
   #       href: license.qmd
   #     - text: "Trademark"
@@ -34,4 +34,4 @@ format:
   html:
     theme: darkly #cosmo #darkly #pulse #skectchy #superhero 
     css: styles.css
-  
+
