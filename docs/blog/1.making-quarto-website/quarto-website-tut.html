@@ -40,6 +40,9 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="dark">
+<script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -210,7 +213,9 @@ In the context of creating websites, Quarto provides a simple yet powerful syste
 <p>The first portion of this tutorial essentially replicates the official Quarto <a href="https://quarto.org/docs/websites/">“Creating a Website” documentation</a> which also covers how to do this process using RStudio and Terminal - which isn’t covered here.</p>
 <section id="step-1" class="level3">
 <h3 class="anchored" data-anchor-id="step-1">Step 1</h3>
-<p>Make a new Quarto website project in VScode via <em>Quarto: Create Project</em></p>
+<p>Make a new Quarto website project in VScode via <strong>“&gt; Quarto: Create Project”</strong> and then selecting <strong>“Website Project”</strong> from the list</p>
+<p><a href="1a.images/vscode-create-project-website.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="1a.images/vscode-create-project-website.png" class="img-fluid"></a></p>
+<p>Next, it will ask you to create a directory - for use with Github pages, name the directory “[Your Github Username].github.io”, for example - mine is MaxMascini.github.io</p>
 </section>
 </section>
 <section id="references-helpful-links" class="level2">
@@ -652,6 +657,31 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","openEffect":"zoom","closeEffect":"zoom","loop":false,"descPosition":"bottom"});
+window.onload = () => {
+  lightboxQuarto.on('slide_before_load', (data) => {
+    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+    const href = trigger.getAttribute('href');
+    if (href !== null) {
+      const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+      if (imgEl !== null) {
+        const srcAttr = imgEl.getAttribute("src");
+        if (srcAttr && srcAttr.startsWith("data:")) {
+          slideConfig.href = srcAttr;
+        }
+      }
+    } 
+  });
+
+  lightboxQuarto.on('slide_after_load', (data) => {
+    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+    if (window.Quarto?.typesetMath) {
+      window.Quarto.typesetMath(slideNode);
+    }
+  });
+
+};
+          </script>
 
 
 

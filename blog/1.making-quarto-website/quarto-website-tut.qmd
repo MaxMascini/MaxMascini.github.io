@@ -49,13 +49,19 @@ The first portion of this tutorial essentially replicates the official Quarto ["
 
 ### Step 1
 
-Make a new Quarto website project in VScode via *Quarto: Create Project*
+Make a new Quarto website project in VScode via **"> Quarto: Create Project"** and then selecting **"Website Project"** from the list
+
+![](1a.images/vscode-create-project-website.png){.lightbox}
+ 
+Next, it will ask you to create a directory - for use with Github pages, name the directory "[Your Github Username].github.io", for example - mine is MaxMascini.github.io
+
 
 
 
 
 
 ## References & Helpful Links
+
 
 Quarto Documentation: <br>
 - [General Quarto Website Documentation](https://quarto.org/docs/websites/) <br>

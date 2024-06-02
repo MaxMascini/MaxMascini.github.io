@@ -39,7 +39,7 @@
     "href": "blog/1.making-quarto-website/quarto-website-tut.html#getting-started",
     "title": "How to Make a Website with Quarto",
     "section": "Getting Started",
-    "text": "Getting Started\nThe first portion of this tutorial essentially replicates the official Quarto “Creating a Website” documentation which also covers how to do this process using RStudio and Terminal - which isn’t covered here.\n\nStep 1\nMake a new Quarto website project in VScode via Quarto: Create Project"
+    "text": "Getting Started\nThe first portion of this tutorial essentially replicates the official Quarto “Creating a Website” documentation which also covers how to do this process using RStudio and Terminal - which isn’t covered here.\n\nStep 1\nMake a new Quarto website project in VScode via “&gt; Quarto: Create Project” and then selecting “Website Project” from the list\n\nNext, it will ask you to create a directory - for use with Github pages, name the directory “[Your Github Username].github.io”, for example - mine is MaxMascini.github.io"
   },
   {
     "objectID": "blog/1.making-quarto-website/quarto-website-tut.html#references-helpful-links",
