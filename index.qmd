@@ -19,3 +19,23 @@ page-layout: full
 ## Welcome to my website!
 
 It's still a work in progress, but once it's done I will make a tutorial so you don't have to fumble around the poorly documented Quarto website construction information like I am :)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+test
