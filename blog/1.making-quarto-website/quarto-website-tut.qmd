@@ -1,0 +1,68 @@
+---
+title: How to Make a Website with Quarto
+image: /xxx.png [Put in same sub-directory as blog post - or make folder within]
+title-block-style: default
+title-block-banner: black
+title-block-banner-color: white
+execute:
+  enabled: true
+format:
+  html:
+    code-fold: false
+author: Max Mascini
+date: '`r Sys.Date()`'
+categories:
+  - Tutorial
+  - Quarto
+  - Website 
+website:
+  back-to-top-navigation: true
+  page-footer: 'Copyright 2024, Max Mascini'
+toc: true
+comments:
+  utterances:
+    repo: MaxMascini/MaxMascini.github.io
+jupyter: python3
+---
+
+## Foreword & Introduction
+
+In this blog post, I will show you how to get started making a website with Quarto in VScode and hosting it through Github pages!
+
+Throughout this tutorial I'll assume that you have at least some knowledge of what Quarto is and how to use it. If that's not the case and you feel lost - feel free to reach out to me in the comments below, or through [email](mailto:mascini.max@gmail.com) - or read the quarto about/documentation [here](https://quarto.org/).
+
+<details>
+<summary> <span style="color:#FFC966">Github Copilot Summarizes Quarto:</span> </summary>
+"Quarto is a powerful and flexible publishing system built on Pandoc. It allows you to create beautiful and meaningful documents, reports, presentations, and websites using a variety of languages including Markdown, R, Python, and others.
+
+Quarto documents are plain text files that can include code, equations, and visualizations. These documents can be converted into a wide range of output formats such as HTML, PDF, EPUB, and Word, among others.
+
+One of the key features of Quarto is its ability to execute embedded code chunks from multiple programming languages within the same document, similar to Jupyter notebooks or R Markdown documents. This makes it a great tool for literate programming and reproducible research.
+
+In the context of creating websites, Quarto provides a simple yet powerful system for creating static websites from a collection of input documents. These websites can be easily hosted on platforms like GitHub Pages, making Quarto a good choice for creating personal websites, blogs, project documentation, and more."
+</details>
+
+## Getting Started
+
+The first portion of this tutorial essentially replicates the official Quarto ["Creating a Website" documentation](https://quarto.org/docs/websites/) which also covers how to do this process using RStudio and Terminal - which isn't covered here.
+
+
+### Step 1
+
+Make a new Quarto website project in VScode via *Quarto: Create Project*
+
+
+
+
+
+## References & Helpful Links
+
+Quarto Documentation: <br>
+- [General Quarto Website Documentation](https://quarto.org/docs/websites/) <br>
+- [Website Options](https://quarto.org/docs/reference/projects/websites.html) <br>
+- [Built-in Icon Options](https://icons.getbootstrap.com/) <br>
+
+
+
+
+
