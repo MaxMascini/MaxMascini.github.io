@@ -1,0 +1,16 @@
+---
+title: Max's Blog
+title-block-style: default
+# title-block-banner: images/black-bg.png
+title-block-banner-color: white
+page-layout: full
+listing:
+  contents: blog
+  sort: "date desc"
+  image-align: left
+  # categories: true
+  type: grid
+  # sort-ui: true
+  # filter-ui: true
+  fields: [image, date, title, author, description, categories]
+---

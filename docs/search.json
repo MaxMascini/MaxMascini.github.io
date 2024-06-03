@@ -14,13 +14,6 @@
     "text": "It’s still a work in progress, but once it’s done I will make a tutorial so you don’t have to fumble around the poorly documented Quarto website construction information like I am :)\ntest"
   },
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "Max Mascini",
-    "section": "",
-    "text": "I love spaghetti (and kitty cats)"
-  },
-  {
     "objectID": "blog/1.making-quarto-website/quarto-website-tut.html",
     "href": "blog/1.making-quarto-website/quarto-website-tut.html",
     "title": "How to Make a Website with Quarto",
@@ -47,5 +40,26 @@
     "title": "How to Make a Website with Quarto",
     "section": "References & Helpful Links",
     "text": "References & Helpful Links\nQuarto Documentation:  - General Quarto Website Documentation  - Website Options  - Built-in Icon Options"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "Max Mascini’s Personal Website",
+    "section": "",
+    "text": "Made using Quarto, hosted via Github pages"
+  },
+  {
+    "objectID": "about_me.html",
+    "href": "about_me.html",
+    "title": "Max Mascini",
+    "section": "",
+    "text": "Hello, My name is Max Mascini! I recently graduated from Dalhousie University (go tigers!) with honors in neuroscience and a certificate in neurotechnology & innovation.  Academically, I am interested in neurotechnology, brain-computer interfacing, data visualization, statistics, machine learning, among other things.  In my spare time, I go outdoors! I love to go on extended backcountry backpacking and canoe trips with friends. If you have any reccomendations for places to go I would love to hear them :D\n\nJob Experience\nNeuroTech Programming Specialist | SURGE Innovation | June 2024 - Present  - Running and creating programming for SURGE’s Neurotech club  - \nResearch Assistant | NeuroCognitive Imaging Lab | June 2024 - Present  - Under PI Dr. Aaron Newman  - Helping with various lab tasks not limited to setting up new recording equipment, helping program stimulus presentation paradigms \nI love spaghetti (and kitty cats)"
+  },
+  {
+    "objectID": "blog.html",
+    "href": "blog.html",
+    "title": "Max’s Blog",
+    "section": "",
+    "text": "How to Make a Website with Quarto\n\n\n\nTutorial\n\n\nQuarto\n\n\nWebsite\n\n\n\n\n\n\n\nMax Mascini\n\n\nInvalid Date\n\n\n\n\n\n\n\n\nNo matching items"
   }
 ]

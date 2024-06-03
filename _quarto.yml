@@ -13,8 +13,10 @@ website:
     left: 
       - href: index.qmd
         text: Home
-      - href: about.qmd
+      - href: about_me.qmd
         text: About me
+      - href: blog.qmd
+        text: Blog
   page-footer:
     center: 
       - text: "About"
