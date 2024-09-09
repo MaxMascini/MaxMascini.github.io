@@ -4,8 +4,8 @@ image: /xxx.png [Put in same sub-directory as blog post - or make folder within]
 title-block-style: default
 title-block-banner: black
 title-block-banner-color: white
-execute:
-  enabled: true
+# execute:
+#   enabled: true
 format:
   html:
     code-fold: false
@@ -22,7 +22,7 @@ toc: true
 comments:
   utterances:
     repo: MaxMascini/MaxMascini.github.io
-jupyter: python3
+# jupyter: python3
 ---
 
 ## Foreword & Introduction

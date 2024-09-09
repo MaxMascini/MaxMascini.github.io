@@ -1,0 +1,63 @@
+name: Deploy Quarto Site to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Get Latest Pre-release from Github
+        id: github-release
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo version=$(gh api repos/quarto-dev/quarto-cli/releases | jq -r 'map(select(.prerelease)) | first | .tag_name | sub("^v";"")') >> "$GITHUB_OUTPUT"    
+
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: ${{ steps.github-release.outputs.version }}
+
+      # - name: Set up Python
+      #   uses: actions/setup-python@v4
+      #   with:
+      #     python-version: '3.12'  # Specify your required Python version
+
+      # - name: Cache Python packages
+      #   id: cache-python
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: ~/.cache/pip
+      #     key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-pip-
+
+      # - name: Install Python dependencies
+      #   run: |
+      #     python -m pip install --upgrade pip
+      #     pip install -r requirements.txt
+
+      - name: Render Site
+        uses: quarto-dev/quarto-actions/render@v2 
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site # The directory where Quarto renders the site
+
+      - name: Output Deployment URL
+        run: |
+          echo "url=https://${{ github.repository_owner }}.github.io/" >> $GITHUB_OUTPUT
+
+          
