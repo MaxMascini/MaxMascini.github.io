@@ -2,7 +2,7 @@ project:
   type: website
   output-dir: _site
   resources:
-    - Resume_Nov_2024.pdf
+    - files/*
 
 execute: 
   freeze: auto
