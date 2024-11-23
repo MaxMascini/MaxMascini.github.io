@@ -1,38 +1,59 @@
 project:
   type: website
   output-dir: _site
+
+execute: 
+  freeze: auto
+
 website:
-  title: "Maximize"
+  title: "MinMaxed"
+  bread-crumbs: true
+  page-navigation: true
+  open-graph: true
+
+  search: 
+    show-item-context: true
+    location: navbar
+    type: overlay
+
   navbar:
     # logo: images/logo.png
+    collapse-below: lg
     right:
       - icon: linkedin
         href: https://www.linkedin.com/in/max-mascini-562239213/
+
       - icon: github
         href: https://github.com/maxmascini
+
     left: 
-      - href: index.qmd
-        text: Home
-      - href: about_me.qmd
-        text: About me
-      - href: blog.qmd
-        text: Blog
+      - text: Home
+        href: index.qmd
+
+      - text: Blog
+        href: blog/blog_index.qmd
+
   page-footer:
     center: 
-      - text: "About"
-        href: about.qmd
-  #     - text: "License"
-  #       href: license.qmd
-  #     - text: "Trademark"
-  #       href: trademark.qmd
-  # favicon: images/logo.png
+      - text: "About Site"
+        href: about_site.qmd
+    left:
+      - text: "Copyright 2024, Max Mascini"
   comments: false
-  # google-analytics:
-  # body-header:
-  # body-footer:
+
 
 format:
   html:
-    theme: darkly #cosmo #darkly #pulse #skectchy #superhero 
-    css: styles.css
+    toc: true
+    # theme: darkly #[darkly, theme.scss]
+    # theme: styles.scss
+    theme: [darkly, styles.scss]
+    appearance: false 
+    code-copy: true
+    code-overflow: wrap
+    css: styles.scss
+    grid:
+      sidebar-width: 250px
+      body-width: 900px
+      margin-width: 300px
 

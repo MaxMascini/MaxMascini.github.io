@@ -3,4 +3,4 @@ title: "Max Mascini's Personal Website"
 subtitle: "Copyright 2024"
 ---
 
-Made using Quarto, hosted via Github pages
+Made using [Quarto](https://quarto.org), hosted via Github pages

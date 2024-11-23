@@ -8,7 +8,7 @@
 
 <meta name="author" content="Max Mascini">
 
-<title>How to Make a Website with Quarto – Maximize</title>
+<title>How to Make a Website with Quarto – MinMaxed</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -55,7 +55,7 @@ ul.task-list li input[type="checkbox"] {
     "/",
     "s"
   ],
-  "show-item-context": false,
+  "show-item-context": true,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -89,7 +89,11 @@ background: black;
 </style>
 
 
-<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="../../styles.scss">
+<meta property="og:title" content="MinMaxed - How to Make a Website with Quarto">
+<meta property="og:description" content="">
+<meta property="og:image" content="/xxx.png [Put in same sub-directory as blog post - or make folder within]">
+<meta property="og:site_name" content="MinMaxed">
 </head>
 
 <body class="nav-fixed">
@@ -100,7 +104,7 @@ background: black;
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../../index.html">
-    <span class="navbar-title">Maximize</span>
+    <span class="navbar-title">MinMaxed</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -114,11 +118,7 @@ background: black;
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../about_me.html"> 
-<span class="menu-text">About me</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../../blog.html"> 
+    <a class="nav-link" href="../../blog/blog_index.html"> 
 <span class="menu-text">Blog</span></a>
   </li>  
 </ul>
@@ -656,13 +656,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-      &nbsp;
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+ Copyright 2024, Max Mascini
+  </li>  
+</ul>
     </div>   
     <div class="nav-footer-center">
       <ul class="footer-items list-unstyled">
     <li class="nav-item">
-    <a class="nav-link" href="../../about.html">
-<p>About</p>
+    <a class="nav-link" href="../../about_site.html">
+<p>About Site</p>
 </a>
   </li>  
 </ul>
@@ -672,7 +676,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"loop":false,"descPosition":"bottom","selector":".lightbox","closeEffect":"zoom","openEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","openEffect":"zoom","selector":".lightbox","loop":false});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {

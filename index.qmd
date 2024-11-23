@@ -1,41 +1,38 @@
 ---
-title: <br> Maximized <br> 
-subtitle: It's a play on my name.... get it? <br> <br> <br> <br> <br> <br> 
-title-block-style: default
-# title-block-banner: images/black-bg.png
-title-block-banner-color: white
-page-layout: full
-listing:
-  contents: blog
-  sort: "date desc"
-  image-align: left
-  # categories: true
-  type: grid
-  # sort-ui: true
-  # filter-ui: true
-  fields: [image, date, title, author, description, categories]
+title: "Max Mascini"
+# subtitle: "Bug & animal enjoyer, general goofball"
+toc: false
+about:
+  image: "images/me.jpg"
+  image-width: 15em
+  image-shape: rounded
+  template: trestles
+  links:
+    - icon: linkedin
+      href: https://www.linkedin.com/in/max-mascini-562239213/
+
+    - icon: github
+      href: https://github.com/maxmascini
+
+    - icon: file-earmark-person-fill
+      text: Resume
+      href: https://
 ---
 
-## Welcome to my website!
+Hello, my name is Max Mascini, and welcome to my personal website! <br>
 
-It's still a work in progress, but once it's done I will make a tutorial so you don't have to fumble around the poorly documented Quarto website construction information like I am :)
+I recently graduated from [Dalhousie University](https://dal.ca) (go tigers!) with first honours in neuroscience and a certificate in neurotechnology & innovation. <br>
+I am currently working as a NeuroTech Programming Specialist at [SURGE Innovation](https://surgeinnovation.ca) and as a Research Assistant in the [NeuroCognitive Imaging Lab](https://www.dal.ca/faculty/science/psychology_neuroscience/facilities/neurocognitive-imaging-lab.html) at Dalhousie University. <br>
+Academically, I am interested in neurotechnology, brain-computer interfacing, data visualization, statistics, and machine learning, among other things. <br>
 
+In my spare time, I love to go on extended backcountry backpacking and canoe trips with family and friends. If you have any reccomendations for places to go I would love to hear them :D <br>
 
+### Job Experience
 
+**NeuroTech Programming Specialist** | *SURGE Innovation* | June 2024 - Present <br>
+- Running and creating programming for SURGE's NeuroTech club <br>
 
+**Research Assistant** | *NeuroCognitive Imaging Lab* | June 2024 - Present <br>
+- Under PI Dr. Aaron Newman <br>
+- Helping with various lab tasks not limited to setting up new recording equipment, helping program stimulus presentation paradigms <br>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-test

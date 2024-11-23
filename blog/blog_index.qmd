@@ -1,0 +1,31 @@
+---
+# title: Max's Blog
+title-block-style: default
+title-block-banner-color: white
+page-layout: full
+toc: false
+
+listing:
+    contents: 
+        - ../blog/*/*.qmd
+    sort: "date desc"
+    image-align: left
+    # categories: true
+    type: grid
+    # sort-ui: true
+    # filter-ui: true
+    fields: [image, date, title, description, categories]
+---
+
+::: {.index_banner}
+
+::: {.index}
+
+# Welcome to my blog!
+
+Take a look at some of my pet projects or tutorials :)
+
+<br>
+:::
+
+::: 

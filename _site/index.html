@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>  Maximized   – Maximize</title>
+<title>Max Mascini – MinMaxed</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,12 +30,9 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
@@ -53,7 +50,7 @@ ul.task-list li input[type="checkbox"] {
     "/",
     "s"
   ],
-  "show-item-context": false,
+  "show-item-context": true,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -68,70 +65,15 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
 
-    const options = {
-      valueNames: ['listing-image','listing-date','listing-title','listing-author','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.scss">
+<meta property="og:title" content="MinMaxed - Max Mascini">
+<meta property="og:description" content="">
+<meta property="og:site_name" content="MinMaxed">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -139,7 +81,7 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">Maximize</span>
+    <span class="navbar-title">MinMaxed</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -153,11 +95,7 @@ window.Quarto = {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./about_me.html"> 
-<span class="menu-text">About me</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./blog.html"> 
+    <a class="nav-link" href="./blog/blog_index.html"> 
 <span class="menu-text">Blog</span></a>
   </li>  
 </ul>
@@ -180,85 +118,51 @@ window.Quarto = {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content column-page" id="quarto-document-content">
-
+<div class="quarto-about-trestles">
+  <div class="about-entity">
+    <img src="images/me.jpg" class="about-image
+  rounded " style="width: 15em;">
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><br> Maximized <br></h1>
-<p class="subtitle lead">It’s a play on my name…. get it? <br> <br> <br> <br> <br> <br></p>
+<h1 class="title">Max Mascini</h1>
 </div>
-
-
-
-<div class="quarto-title-meta column-page">
-
-    
-  
-    
+<div class="quarto-title-meta">
   </div>
-  
-
-
 </header>
-
-
-<section id="welcome-to-my-website" class="level2">
-<h2 class="anchored" data-anchor-id="welcome-to-my-website">Welcome to my website!</h2>
-<p>It’s still a work in progress, but once it’s done I will make a tutorial so you don’t have to fumble around the poorly documented Quarto website construction information like I am :)</p>
-<p>test</p>
-
+    <div class="about-links">
+  <a href="https://www.linkedin.com/in/max-mascini-562239213/" class="about-link" rel="" target="">
+    <i class="bi bi-linkedin"></i>
+     <span class="about-link-text"></span>
+  </a>
+  <a href="https://github.com/maxmascini" class="about-link" rel="" target="">
+    <i class="bi bi-github"></i>
+     <span class="about-link-text"></span>
+  </a>
+  <a href="https://" class="about-link" rel="" target="">
+    <i class="bi bi-file-earmark-person-fill"></i>
+     <span class="about-link-text">Resume</span>
+  </a>
+</div>
+  </div>
+  <div class="about-contents"><main class="content" id="quarto-document-content">
+<p>Hello, my name is Max Mascini, and welcome to my personal website! <br></p>
+<p>I recently graduated from <a href="https://dal.ca">Dalhousie University</a> (go tigers!) with first honours in neuroscience and a certificate in neurotechnology &amp; innovation. <br> I am currently working as a NeuroTech Programming Specialist at <a href="https://surgeinnovation.ca">SURGE Innovation</a> and as a Research Assistant in the <a href="https://www.dal.ca/faculty/science/psychology_neuroscience/facilities/neurocognitive-imaging-lab.html">NeuroCognitive Imaging Lab</a> at Dalhousie University. <br> Academically, I am interested in neurotechnology, brain-computer interfacing, data visualization, statistics, and machine learning, among other things. <br></p>
+<p>In my spare time, I love to go on extended backcountry backpacking and canoe trips with family and friends. If you have any reccomendations for places to go I would love to hear them :D <br></p>
+<section id="job-experience" class="level3">
+<h3 data-anchor-id="job-experience">Job Experience</h3>
+<p><strong>NeuroTech Programming Specialist</strong> | <em>SURGE Innovation</em> | June 2024 - Present <br> - Running and creating programming for SURGE’s NeuroTech club <br></p>
+<p><strong>Research Assistant</strong> | <em>NeuroCognitive Imaging Lab</em> | June 2024 - Present <br> - Under PI Dr.&nbsp;Aaron Newman <br> - Helping with various lab tasks not limited to setting up new recording equipment, helping program stimulus presentation paradigms <br></p>
 
 
 </section>
-
-<div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
-<div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-categories="Tutorial,Quarto,Website" data-listing-date-sort="NaN" data-listing-file-modified-sort="1725894183218" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="338">
-<a href="./blog/1.making-quarto-website/quarto-website-tut.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./xxx.png [Put in same sub-directory as blog post - or make folder within]" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-How to Make a Website with Quarto
-</h5>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('Tutorial'); return false;">
-Tutorial
+</main></div>
 </div>
-<div class="listing-category" onclick="window.quartoListingCategory('Quarto'); return false;">
-Quarto
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Website'); return false;">
-Website
-</div>
-</div>
-<div class="card-text listing-description">
-In this blog post, I will show you how to get started making a website with Quarto in VScode and hosting it through Github pages!
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Max Mascini
-</div>
-<div class="listing-date">
-Invalid Date
-</div>
-</div>
-</div>
-</div>
-</a>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+ <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -279,13 +183,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
   const isCodeAnnotation = (el) => {
     for (const clz of el.classList) {
       if (clz.startsWith('code-annotation-')) {                     
@@ -683,13 +580,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-      &nbsp;
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+ Copyright 2024, Max Mascini
+  </li>  
+</ul>
     </div>   
     <div class="nav-footer-center">
       <ul class="footer-items list-unstyled">
     <li class="nav-item">
-    <a class="nav-link" href="./about.html">
-<p>About</p>
+    <a class="nav-link" href="./about_site.html">
+<p>About Site</p>
 </a>
   </li>  
 </ul>
