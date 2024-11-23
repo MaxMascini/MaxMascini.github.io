@@ -14,9 +14,9 @@ about:
     - icon: github
       href: https://github.com/maxmascini
 
-    # - icon: file-earmark-person-fill
-    #   text: Resume
-    #   href: https://
+    - icon: file-earmark-person-fill
+      text: Resume
+      href: Resume_Nov_2024.pdf
 ---
 
 Hello, my name is Max Mascini, and welcome to my personal website! <br>
