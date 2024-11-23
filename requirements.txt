@@ -1,0 +1,9 @@
+numpy>=2.*
+pandas==2.2.2
+seaborn==0.13.2
+matplotlib==3.9.1
+plotly==5.23.0
+scikit-learn==1.5.1
+mlxtend==0.23.1
+jupyter==1.0.0
+nbformat==5.10.4

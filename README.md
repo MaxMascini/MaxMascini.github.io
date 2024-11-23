@@ -1,6 +1,7 @@
-# Repo for my personal website & blog
+# [MaxMascini.github.io](https://MaxMascini.github.io)
 
 Currently a WIP - being made with Quarto!
+
 
 References/Links for me so I don't have to find them again:
 - https://quarto.org/docs/websites/
