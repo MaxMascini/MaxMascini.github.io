@@ -2,6 +2,8 @@
 title: "Max Mascini"
 # subtitle: "Bug & animal enjoyer, general goofball"
 toc: false
+
+pdf: "files/Resume_Nov_2024.pdf"
 about:
   image: "images/me.jpg"
   image-width: 15em
@@ -17,7 +19,10 @@ about:
     - icon: file-earmark-person-fill
       text: Resume
       href: "files/Resume_Nov_2024.pdf"
-      # href: cv.qmd
+
+    - icon: envelope
+      text: Test
+      href: cv.qmd
 ---
 
 Hello, my name is Max Mascini, and welcome to my personal website! <br>
