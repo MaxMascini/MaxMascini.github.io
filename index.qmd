@@ -16,13 +16,13 @@ about:
     - icon: github
       href: https://github.com/maxmascini
 
+    - icon: envelope
+      text: Email
+      href: mailto:mascini.max@gmail.com
+
     - icon: file-earmark-person-fill
       text: Resume
       href: "files/Resume_Nov_2024.pdf"
-
-    # - icon: envelope
-    #   text: Test
-    #   href: cv.qmd
 ---
 
 Hello, my name is Max Mascini, and welcome to my personal website! <br>
