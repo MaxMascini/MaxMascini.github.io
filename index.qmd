@@ -16,7 +16,8 @@ about:
 
     - icon: file-earmark-person-fill
       text: Resume
-      href: files/Resume_Nov_2024.pdf
+      href: "files/Resume_Nov_2024.pdf"
+      # href: cv.qmd
 ---
 
 Hello, my name is Max Mascini, and welcome to my personal website! <br>

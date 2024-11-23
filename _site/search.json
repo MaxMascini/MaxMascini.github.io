@@ -7,20 +7,6 @@
     "text": "ToDo list:\n\nAdd resume & remove job experience stuff from index\n\nAlso add link/mention of blog\n\nComplete how to make a website with Quarto"
   },
   {
-    "objectID": "blog/blog_index.html",
-    "href": "blog/blog_index.html",
-    "title": "Welcome to my blog!",
-    "section": "",
-    "text": "Welcome to my blog!\nTake a look at some of my pet projects or tutorials :)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHow to Make a Website with Quarto\n\n\n\nTutorial\n\n\nQuarto\n\n\nWebsite\n\n\n\n\n\n\n\nInvalid Date\n\n\n\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "about_site.html",
-    "href": "about_site.html",
-    "title": "Max Mascini’s Personal Website",
-    "section": "",
-    "text": "Made using Quarto, hosted via Github pages"
-  },
-  {
     "objectID": "blog/1.making-quarto-website/quarto-website-tut.html",
     "href": "blog/1.making-quarto-website/quarto-website-tut.html",
     "title": "How to Make a Website with Quarto",
@@ -47,6 +33,20 @@
     "title": "How to Make a Website with Quarto",
     "section": "References & Helpful Links",
     "text": "References & Helpful Links\nQuarto Documentation:  - General Quarto Website Documentation  - Website Options  - Built-in Icon Options"
+  },
+  {
+    "objectID": "about_site.html",
+    "href": "about_site.html",
+    "title": "Max Mascini’s Personal Website",
+    "section": "",
+    "text": "Made using Quarto, hosted via Github pages"
+  },
+  {
+    "objectID": "blog/blog_index.html",
+    "href": "blog/blog_index.html",
+    "title": "Welcome to my blog!",
+    "section": "",
+    "text": "Welcome to my blog!\nTake a look at some of my pet projects or tutorials :)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHow to Make a Website with Quarto\n\n\n\nTutorial\n\n\nQuarto\n\n\nWebsite\n\n\n\n\n\n\n\nInvalid Date\n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "index.html",
