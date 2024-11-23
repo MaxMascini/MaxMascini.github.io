@@ -1,10 +1,24 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Max Mascini",
+    "objectID": "TODO.html",
+    "href": "TODO.html",
+    "title": "ToDo list:",
     "section": "",
-    "text": "Hello, my name is Max Mascini, and welcome to my personal website! \nI recently graduated from Dalhousie University (go tigers!) with first honours in neuroscience and a certificate in neurotechnology & innovation.  I am currently working as a NeuroTech Programming Specialist at SURGE Innovation and as a Research Assistant in the NeuroCognitive Imaging Lab at Dalhousie University.  Academically, I am interested in neurotechnology, brain-computer interfacing, data visualization, statistics, and machine learning, among other things. \nIn my spare time, I love to go on extended backcountry backpacking and canoe trips with family and friends. If you have any reccomendations for places to go I would love to hear them :D \n\nJob Experience\nNeuroTech Programming Specialist | SURGE Innovation | June 2024 - Present  - Running and creating programming for SURGE’s NeuroTech club \nResearch Assistant | NeuroCognitive Imaging Lab | June 2024 - Present  - Under PI Dr. Aaron Newman  - Helping with various lab tasks not limited to setting up new recording equipment, helping program stimulus presentation paradigms"
+    "text": "ToDo list:\n\nAdd resume & remove job experience stuff from index\n\nAlso add link/mention of blog\n\nComplete how to make a website with Quarto"
+  },
+  {
+    "objectID": "blog/blog_index.html",
+    "href": "blog/blog_index.html",
+    "title": "Welcome to my blog!",
+    "section": "",
+    "text": "Welcome to my blog!\nTake a look at some of my pet projects or tutorials :)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHow to Make a Website with Quarto\n\n\n\nTutorial\n\n\nQuarto\n\n\nWebsite\n\n\n\n\n\n\n\nInvalid Date\n\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "about_site.html",
+    "href": "about_site.html",
+    "title": "Max Mascini’s Personal Website",
+    "section": "",
+    "text": "Made using Quarto, hosted via Github pages"
   },
   {
     "objectID": "blog/1.making-quarto-website/quarto-website-tut.html",
@@ -35,17 +49,10 @@
     "text": "References & Helpful Links\nQuarto Documentation:  - General Quarto Website Documentation  - Website Options  - Built-in Icon Options"
   },
   {
-    "objectID": "about_site.html",
-    "href": "about_site.html",
-    "title": "Max Mascini’s Personal Website",
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Max Mascini",
     "section": "",
-    "text": "Made using Quarto, hosted via Github pages"
-  },
-  {
-    "objectID": "blog/blog_index.html",
-    "href": "blog/blog_index.html",
-    "title": "Welcome to my blog!",
-    "section": "",
-    "text": "Welcome to my blog!\nTake a look at some of my pet projects or tutorials :)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHow to Make a Website with Quarto\n\n\n\nTutorial\n\n\nQuarto\n\n\nWebsite\n\n\n\n\n\n\n\nInvalid Date\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Hello, my name is Max Mascini, and welcome to my personal website! \nI recently graduated from Dalhousie University (go tigers!) with first honours in neuroscience and a certificate in neurotechnology & innovation. \nI am currently working as a NeuroTech Programming Specialist at SURGE Innovation and as a Research Assistant in the NeuroCognitive Imaging Lab at Dalhousie University. \nAcademically, I am interested in neurotechnology, brain-computer interfacing, data visualization, statistics, and machine learning, among other things. \nIn my spare time, I love to go on extended backcountry backpacking and canoe trips with family and friends. If you have any reccomendations for places to go I would love to hear them :D \n\nJob Experience\nNeuroTech Programming Specialist | SURGE Innovation | June 2024 - Present  - Running and creating programming for SURGE’s NeuroTech club \nResearch Assistant | NeuroCognitive Imaging Lab | June 2024 - Present  - Under PI Dr. Aaron Newman  - Helping with various lab tasks: EEG recording, paradigm creation, teaching/overseeing undergraduate students data analysis, and running participants."
   }
 ]

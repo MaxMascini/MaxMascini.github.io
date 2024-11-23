@@ -1,0 +1,12 @@
+{
+  "hash": "c243e2f10daa92494944d23a818ba974",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "<!-- ---\ntitle: Curriculum vitæ\ndescription: \"max Mascini's CV\"\ndate: 2024-11-23\n# title-block-banner: \"#771C6D\"\n# published-title: CV last updated\n# engine: knitr\nfreeze: false\ncv:\n  pdf: \"files/Resume_Nov_2024.pdf\"\n\n---\n\n```{css, echo=FALSE}\n#title-block-header .description {\n    display: none;\n}\n```\n\n```{css echo=FALSE}\n.embed-container {\n    position: relative;\n    padding-bottom: 129%;\n    height: 0;\n    overflow: hidden;\n    max-width: 100%;\n}\n\n.embed-container iframe,\n.embed-container object,\n.embed-container embed {\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n}\n```\n\n```{=html}\n<p class=\"text-center\">\n  <a class=\"btn btn-primary btn-lg cv-download\" href=\"`r rmarkdown::metadata$cv$pdf`\" target=\"_blank\">\n    <i class=\"fa-solid fa-file-arrow-down\"></i>&ensp;Download current CV\n  </a>\n</p>\n\n<div class=\"embed-container\">\n  <iframe src=\"`r rmarkdown::metadata$cv$pdf`\" style=\"border: 0.5px\"></iframe>\n</div>\n``` -->\n\n",
+    "supporting": [
+      "cv_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}
