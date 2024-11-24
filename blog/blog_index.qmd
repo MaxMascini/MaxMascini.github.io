@@ -4,6 +4,7 @@ title-block-style: default
 title-block-banner-color: white
 page-layout: full
 toc: false
+date-format: "D MMMM, YYYY"
 
 listing:
     contents: 

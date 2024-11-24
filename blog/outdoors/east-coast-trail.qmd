@@ -1,0 +1,14 @@
+---
+title: Backbacking the East Coast Trail
+date: '`r Sys.Date()`'
+categories:
+    - Outdoors
+    - Backpacking
+---
+
+
+## Introduction
+
+This past summer my mother and I undertook a thru-hike of the [East Coast Trail](https://eastcoasttrail.com/) - a 360km trail that runs along avalon peninsula on the eastern coast of Newfoundland, Canada. The trail is broken up into 25 sections, each with its own unique challenges and rewards. 
+
+

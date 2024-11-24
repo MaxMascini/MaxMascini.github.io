@@ -2,13 +2,14 @@ project:
   type: website
   output-dir: _site
   resources:
-    - files/*
+    - files/**
 
 execute: 
   freeze: auto
 
 website:
   title: "MinMaxed"
+  # description: "Max Mascini is a "
   bread-crumbs: true
   page-navigation: true
   open-graph: true
@@ -21,19 +22,20 @@ website:
   navbar:
     # logo: images/logo.png
     collapse-below: lg
+
+    left: 
+      - text: "About"
+        href: index.qmd
+
+      - text: Blog
+        href: blog/blog_index.qmd
+
     right:
       - icon: linkedin
         href: https://www.linkedin.com/in/max-mascini-562239213/
 
       - icon: github
         href: https://github.com/maxmascini
-
-    left: 
-      - text: Home
-        href: index.qmd
-
-      - text: Blog
-        href: blog/blog_index.qmd
 
   page-footer:
     center: 
