@@ -7,18 +7,25 @@
     "text": "ToDo list:\n\nAdd resume & remove job experience stuff from index\n\nAlso add link/mention of blog\n\nComplete how to make a website with Quarto"
   },
   {
-    "objectID": "blog/blog_index.html",
-    "href": "blog/blog_index.html",
-    "title": "Welcome to my blog!",
+    "objectID": "blog/outdoors/east-coast-trail.html",
+    "href": "blog/outdoors/east-coast-trail.html",
+    "title": "Backbacking the East Coast Trail",
     "section": "",
-    "text": "Welcome to my blog!\nTake a look at some of my pet projects or tutorials :)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHow to Make a Website with Quarto\n\n\n\nTutorial\n\n\nQuarto\n\n\nWebsite\n\n\n\n\n\n\n\nInvalid Date\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "During July-August of 2024, my mother and I undertook a thru-hike of the East Coast Trail - a 360km trail that runs along avalon peninsula on the eastern coast of Newfoundland, Canada. The trail is broken up into 25 sections, each with its own unique challenges and rewards."
   },
   {
-    "objectID": "about_site.html",
-    "href": "about_site.html",
-    "title": "Max Mascini’s Personal Website",
+    "objectID": "blog/outdoors/east-coast-trail.html#introduction",
+    "href": "blog/outdoors/east-coast-trail.html#introduction",
+    "title": "Backbacking the East Coast Trail",
     "section": "",
-    "text": "Made using Quarto, hosted via Github pages"
+    "text": "During July-August of 2024, my mother and I undertook a thru-hike of the East Coast Trail - a 360km trail that runs along avalon peninsula on the eastern coast of Newfoundland, Canada. The trail is broken up into 25 sections, each with its own unique challenges and rewards."
+  },
+  {
+    "objectID": "blog/outdoors/east-coast-trail.html#preparation",
+    "href": "blog/outdoors/east-coast-trail.html#preparation",
+    "title": "Backbacking the East Coast Trail",
+    "section": "Preparation",
+    "text": "Preparation\nMany people choose to do the trail in sections, or thru-hike in 10-15 days. We decided to do the trail in 20 days, which allowed us to take our time and enjoy the scenery. We also decided to do the trail north to south, starting in Topsail and ending in Cappahayden. While possible to carry enough food for the entire trip, we decided to plan and execute food drops at several locations along the trail. This allowed us to carry less weight on each section and plan our weight:calorie ratio more effectively."
   },
   {
     "objectID": "blog/1.making-quarto-website/quarto-website-tut.html",
@@ -49,10 +56,24 @@
     "text": "References & Helpful Links\nQuarto Documentation:  - General Quarto Website Documentation  - Website Options  - Built-in Icon Options"
   },
   {
+    "objectID": "about_site.html",
+    "href": "about_site.html",
+    "title": "Max Mascini’s Personal Website",
+    "section": "",
+    "text": "Made using Quarto, hosted via Github pages"
+  },
+  {
+    "objectID": "blog/blog_index.html",
+    "href": "blog/blog_index.html",
+    "title": "Welcome to my blog!",
+    "section": "",
+    "text": "Take a look at some of my outdoor adventures, pet projects or tutorials :)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHow to Make a Website with Quarto\n\n\n\nTutorial\n\nQuarto\n\nWebsite\n\n\n\n\n\n\n\nInvalid Date\n\n\n\n\n\n\n\n\n\n\n\nBackbacking the East Coast Trail\n\n\n\nOutdoors\n\nBackpacking\n\nGuide\n\n\n\n\n\n\n\n11 December, 2025\n\n\n\n\n\n\nNo matching items"
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Max Mascini",
     "section": "",
-    "text": "Hello, my name is Max Mascini, and welcome to my personal website! \nI recently graduated from Dalhousie University (go tigers!) with first honours in neuroscience and a certificate in neurotechnology & innovation. \nI am currently working as a NeuroTech Programming Specialist at SURGE Innovation and as a Research Assistant in the NeuroCognitive Imaging Lab at Dalhousie University. \nAcademically, I am interested in neurotechnology, brain-computer interfacing, data visualization, statistics, and machine learning, among other things. \nIn my spare time, I love to go on extended backcountry backpacking and canoe trips with family and friends. If you have any reccomendations for places to go I would love to hear them :D \n\nJob Experience\nNeuroTech Programming Specialist | SURGE Innovation | June 2024 - Present  - Running and creating programming for SURGE’s NeuroTech club \nResearch Assistant | NeuroCognitive Imaging Lab | June 2024 - Present  - Under PI Dr. Aaron Newman  - Helping with various lab tasks: EEG recording, paradigm creation, teaching/overseeing undergraduate students data analysis, and running participants."
+    "text": "Hello, my name is Max Mascini, and welcome to my website!\nI am a Dalhousie University 🐯 first-class honours graduate in neuroscience and a certificate in neurotechnology & innovation. \nCurrently working as a Research Assistant at the NeuroCognitive Imaging Lab at Dalhousie University and a NeuroTech Programming Specialist at SURGE Innovation. \nMy research interests are at the intersection between the brain, technology and computer science but I also have passions for data visualization, statistics, and AI/machine learning. \nIn my spare time, I love to go on backcountry backpacking and canoe trips. If you have any recommendations for places to go I would love to hear them :D \nReach out anytime: Mascini.max@dal.com"
   }
 ]

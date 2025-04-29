@@ -4,6 +4,7 @@ title-block-style: default
 title-block-banner-color: white
 page-layout: full
 toc: false
+date-format: "D MMMM, YYYY"
 
 listing:
     contents: 
@@ -23,7 +24,7 @@ listing:
 
 # Welcome to my blog!
 
-Take a look at some of my pet projects or tutorials :)
+Take a look at some of my outdoor adventures, pet projects or tutorials :)
 
 <br>
 :::
