@@ -4,32 +4,38 @@ title: "Max Mascini"
 toc: false
 
 about:
-  image: "images/me.jpg"
+  image: "images/max_kitty_pic.jpg"
   image-width: 15em
   image-shape: rounded
   template: trestles
   links:
     - icon: linkedin
-      href: https://www.linkedin.com/in/max-mascini-562239213/
+      text: LinkedIn
+      href: https://www.linkedin.com/in/maxmascini/
 
     - icon: github
+      text: GitHub
       href: https://github.com/maxmascini
+
+    - icon: file-earmark-person-fill
+      text: CV
+      href: "files/Website_CV_APR_2025.pdf"
 
     - icon: envelope
       text: Email
-      href: mailto:mascini.max@gmail.com
-
-    - icon: file-earmark-person-fill
-      text: Resume
-      href: "files/Resume_Nov_2024.pdf"
+      href: mailto:mascini.max@dal.ca
 ---
 
-Hello, my name is Max Mascini, and welcome to my website! <br>
+# Hello, my name is Max Mascini, and welcome to my website! 
 
-I recently graduated from [Dalhousie University](https://dal.ca) (go tigers!) with first honours in neuroscience and a certificate in neurotechnology & innovation. <br>
+I am a [Dalhousie University 🐯](https://www.youtube.com/live/3SxKIHY1dzI?t=5325s) first-class honours graduate in neuroscience and a certificate in neurotechnology & innovation. <br>
 
-I am currently working as a NeuroTech Programming Specialist at [SURGE Innovation](https://surgeinnovation.ca) and as a Research Assistant in the [NeuroCognitive Imaging Lab](https://www.ncilab.ca/) at Dalhousie University. <br>
+Currently working as a Research Assistant at the [NeuroCognitive Imaging Lab](https://www.ncilab.ca/) at Dalhousie University and a NeuroTech Programming Specialist at [SURGE Innovation](https://surgeinnovation.ca/). <br>
 
-Currently, I am extremely interested in neurotechnology and brain-computer interfacing but also have a passion for data visualization, statistics, and machine learning, among other things. <br>
+My research interests are at the intersection between the brain, technology and computer science but I also have passions for data visualization, statistics, and AI/machine learning. <br>
 
-In my spare time, I love to go on extended backcountry backpacking and canoe trips with family and friends. If you have any reccomendations for places to go I would love to hear them :D <br>
+In my spare time, I love to go on backcountry backpacking and canoe trips. If you have any recommendations for places to go I would love to hear them :D <br>
+
+Reach out anytime: [Mascini.max@dal.com](mailto:Mascini.max@dal.ca)
+
+---

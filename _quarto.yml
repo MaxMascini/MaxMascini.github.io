@@ -42,7 +42,7 @@ website:
       - text: "About Site"
         href: about_site.qmd
     left:
-      - text: "Copyright 2024, Max Mascini"
+      - text: "Copyright 2025, Max Mascini"
   comments: false
 
 
