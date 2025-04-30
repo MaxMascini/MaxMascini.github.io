@@ -18,7 +18,10 @@ website:
   google-analytics: 
     tracking-id: "GTM-TJ454JG2"
     anonymize-ip: true
-  cookie-consent: true
+  cookie-consent:
+    type: implied
+    palette: dark
+
 
   # Search Bar
   search: 
