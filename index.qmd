@@ -28,7 +28,7 @@ about:
 
 # Hello, my name is Max Mascini, and welcome to my website! 
 
-I am a Masters of Computer Science student at Dalhousie University in Halifax, Nova Scotia, Canada, expected to graduate in 2027. My research focuses on AI ethics and theory of mind in human-AI interactions. <br>
+I am a Masters of Computer Science student at Dalhousie University in Halifax, Nova Scotia! My research focuses on AI ethics and theory of mind in human-AI interactions. <br>
 
 I did my undergraduate degree at [Dalhousie University 🐯](https://www.youtube.com/live/3SxKIHY1dzI?t=5325s) and graduated with first-class honours in neuroscience and a certificate in neurotechnology & innovation. <br>
 
