@@ -19,7 +19,7 @@ about:
 
     - icon: file-earmark-person-fill
       text: CV
-      href: "files/Website_CV_APR_2025.pdf"
+      href: "files/Academic_CV_Jan_2026.pdf"
 
     - icon: envelope
       text: Email
