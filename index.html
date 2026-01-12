@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.0">
+<meta name="generator" content="quarto-1.9.16">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -34,13 +34,14 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-20bdac5c5cb850bfd44e8e14a3391eca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-82d683e9f830cba069e3fb8cbfbea53b.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-59beeed0dffdd1cd69d3bc35444b7b03.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-04e94538bd3c5688ee7bedba7cf52e42.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -173,7 +174,7 @@ cookieconsent.run({
     <i class="bi bi-github"></i>
      <span class="about-link-text">GitHub</span>
   </a>
-  <a href="/files/Website_CV_APR_2025.pdf" class="about-link" rel="" target="">
+  <a href="/files/Academic_CV_Jan_2026.pdf" class="about-link" rel="" target="">
     <i class="bi bi-file-earmark-person-fill"></i>
      <span class="about-link-text">CV</span>
   </a>
@@ -186,8 +187,9 @@ cookieconsent.run({
   <div class="about-contents"><main class="content" id="quarto-document-content">
 <section id="hello-my-name-is-max-mascini-and-welcome-to-my-website" class="level1">
 <h1>Hello, my name is Max Mascini, and welcome to my website!</h1>
-<p>I am a <a href="https://www.youtube.com/live/3SxKIHY1dzI?t=5325s">Dalhousie University 🐯</a> first-class honours graduate in neuroscience and a certificate in neurotechnology &amp; innovation. <br></p>
-<p>Currently working as a Research Assistant at the <a href="https://www.ncilab.ca/">NeuroCognitive Imaging Lab</a> at Dalhousie University and a NeuroTech Programming Specialist at <a href="https://surgeinnovation.ca/">SURGE Innovation</a>. <br></p>
+<p>I am a Masters of Computer Science student at Dalhousie University in Halifax, Nova Scotia! My research focuses on AI ethics and theory of mind in human-AI interactions. <br></p>
+<p>I did my undergraduate degree at <a href="https://www.youtube.com/live/3SxKIHY1dzI?t=5325s">Dalhousie University 🐯</a> and graduated with first-class honours in neuroscience and a certificate in neurotechnology &amp; innovation. <br></p>
+<p>Currently working as the NeuroTech Programming Specialist at <a href="https://surgeinnovation.ca/">SURGE Innovation</a>. <br></p>
 <p>My research interests are at the intersection between the brain, technology and computer science but I also have passions for data visualization, statistics, and AI/machine learning. <br></p>
 <p>In my spare time, I love to go on backcountry backpacking and canoe trips. If you have any recommendations for places to go I would love to hear them :D <br></p>
 <p>Reach out anytime: <a href="mailto:Mascini.max@dal.ca">Mascini.max@dal.com</a></p>
@@ -242,13 +244,14 @@ cookieconsent.run({
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
