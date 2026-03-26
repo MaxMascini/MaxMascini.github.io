@@ -1,10 +1,129 @@
 [
   {
-    "objectID": "about_site.html",
-    "href": "about_site.html",
-    "title": "Max Mascini’s Personal Website",
+    "objectID": "PLAN.html",
+    "href": "PLAN.html",
+    "title": "MinMaxed v2 — Personal Website Rebuild Plan",
     "section": "",
-    "text": "Made using Quarto, hosted via Github pages"
+    "text": "The current site is built with Quarto (a scientific publishing framework) and hosted on GitHub Pages. While functional, Quarto is heavyweight for a personal site and limits creative control over the visual design. The goal is to replace it with a modern, hand-crafted site with a beautiful interactive landing page, a blog, and a portfolio section — while keeping the same GitHub Pages hosting at https://maxmascini.github.io/.\n\n\n\n\nAstro 4.x is the right choice because: - Ships zero JS by default → fast landing page - First-class Markdown/MDX for the blog - File-based routing (one .astro file = one page) - GitHub Pages deployment is fully supported via official actions - Existing .qmd blog posts migrate to .md with minimal changes - Tailwind CSS integrates as a first-party plugin\nKey packages: @astrojs/tailwind, @astrojs/mdx, @astrojs/sitemap, @astrojs/rss, astro-icon, @tailwindcss/typography\n\n\n\n\nBorrows from two of Max’s worlds: topographic maps (outdoors) and neural network diagrams (neuroscience/AI). Clean, data-forward, dark, with warmth.\n\n\n\n\n\n\n\n\n\n\nRole\nHex\nNotes\n\n\n\n\nBackground\n#1a1a2e\nSlightly blue-shifted from current #222\n\n\nSurface (cards)\n#16213e\nElevated surfaces\n\n\nPrimary accent\n#2C9AB7\nKeep existing teal — it’s the site identity\n\n\nTeal light\n#4fc3f7\nHover states\n\n\nSage green\n#4caf82\nOutdoors/nature context (trail posts, tags)\n\n\nAmber\n#f6a623\nSparingly for CTAs\n\n\nText\n#e8eaf0\nMain body\n\n\nMuted text\n#8892a4\nDates, metadata\n\n\n\n\n\n\n\nHeadings: Inter Variable (clean, modern, technical)\nBody/Blog prose: Source Serif 4 Variable (makes long-form feel intentional)\nCode: JetBrains Mono\n\n\n\n\nRestraint. Animations serve orientation, not decoration: - Scroll reveal: sections fade + translate up via IntersectionObserver (~20 lines JS) - Hero: animated SVG topographic contour lines (CSS stroke-dashoffset animation) - Hover: card lift (translateY(-4px) + shadow) — CSS only - Nav: sticky with backdrop-filter: blur() activating on scroll - No scroll-jacking, no parallax, no page transitions\n\n\n\n\n\n/              → Landing page (hero + quick bio + featured projects + recent posts)\n/about         → Full bio, timeline, interests, CV download\n/blog          → Blog index with tag filter\n/blog/[slug]   → Individual post (MDX capable)\n/projects      → Portfolio grid with tag filter\n/research      → Research focus, interests, publications (starts sparse)\n/contact       → Email/social links, location\n/404           → Custom 404\n\n\n\nHero — Full viewport, animated SVG topo background, name + typewriter subtitle (“CS Researcher” / “Backpacker” / “Neuroscience Alum”), two CTAs\nQuick Bio Strip — Photo (teal ring), 3-sentence bio, quick stats, social links\nFeatured Work — 2–3 project cards flagged featured: true\nRecent Posts — Latest 2 blog cards\nResearch Teaser — One-liner + link to /research\nFooter — Nav | Social | Copyright\n\n\n\n\n\nFull bio (longer than landing)\nTimeline component: neuroscience undergrad start → first-class honours + neurotechnology cert → ECT thru-hike → MCS start → SURGE role → present\nInterests cards: AI Research | Data Visualization | Backpacking\nCV download button (PDF)\n\n\n\n\n\nTag filter bar (client-side, ~30 lines JS, no library): All | Tutorial | Outdoors | Research\nCard grid: image, date, title, description, tags\nPost pages: reading time estimate, prev/next navigation, tag links\n\n\n\n\n\nProject cards: title, description, tech stack badges, GitHub/live links\nSame tag filter pattern as blog\nProjects defined in src/content/projects/ collection\n\n\n\n\n\nCurrent research area (human-AI interaction, theory of mind)\nResearch interests list\nPublications section (placeholder initially, grows over time)\nDalhousie affiliation, CV link\n\n\n\n\n\n/now page — A short “currently” update (what I’m working on, reading, last trail). Shows the site is alive. Easy to maintain.\nSpeaking/Writing — Add to Research page initially, promote when content grows\nInteractive data viz showcase — Future: embed a D3/Observable trail elevation profile from the ECT using public DEM data. Strong differentiator given the data viz interest.\nUtterances comments — Already configured in Quarto; migrates easily as an Astro script component when ready.\n\n\n\n\n\n\nMaxMascini.github.io/\n├── .github/workflows/deploy.yml     ← Replace existing Quarto workflow\n├── public/\n│   ├── files/Academic_CV_Jan_2026.pdf\n│   ├── images/{max_kitty_pic.jpg, max_surge_pic.jpg}\n│   └── favicon.ico\n├── src/\n│   ├── components/\n│   │   ├── layout/{Header, Footer, SEOHead}.astro\n│   │   ├── ui/{BlogCard, ProjectCard, TagBadge, TimelineItem, SocialLinks}.astro\n│   │   └── home/{Hero, FeaturedProjects, RecentPosts, TopoBackground}.astro\n│   ├── content/\n│   │   ├── config.ts                ← Content collection schemas\n│   │   ├── blog/\n│   │   │   ├── quarto-website-tutorial.md   ← Migrated from .qmd\n│   │   │   └── east-coast-trail.md          ← Migrated from .qmd\n│   │   └── projects/\n│   │       └── *.md\n│   ├── layouts/{BaseLayout, BlogPostLayout, PageLayout}.astro\n│   ├── pages/\n│   │   ├── index.astro\n│   │   ├── about.astro\n│   │   ├── research.astro\n│   │   ├── contact.astro\n│   │   ├── blog/{index.astro, [...slug].astro}\n│   │   ├── projects/index.astro\n│   │   └── 404.astro\n│   └── styles/global.css\n├── astro.config.mjs\n├── tailwind.config.mjs\n├── package.json\n└── tsconfig.json\n\n\n\n\nBoth existing posts migrate from .qmd to .md:\nEast Coast Trail (blog/outdoors/east-coast-trail.qmd) — Near-clean migration: - Fix date format: \"24-11-2024\" → 2024-11-24 - Add a description field - Body prose is standard Markdown — preserves as-is\nQuarto Tutorial (blog/1.making-quarto-website/quarto-website-tut.qmd) — Needs more cleanup: - Remove Quarto-only YAML fields (title-block-banner, execute, comments utterances config) - Replace `r Sys.Date()` with a literal date - Replace {.lightbox} image syntax with standard ![alt](path)\n\n\n\n\nReplace .github/workflows/deploy.yml entirely. New workflow uses the official GitHub Pages API (no gh-pages branch):\nname: Deploy Astro Site\n\non:\n  push:\n    branches: [main]\n  workflow_dispatch:\n\npermissions:\n  contents: read\n  pages: write\n  id-token: write\n\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with: { node-version: 20, cache: npm }\n      - run: npm ci\n      - run: npm run build\n      - uses: actions/upload-pages-artifact@v3\n        with: { path: ./dist }\n\n  deploy:\n    needs: build\n    runs-on: ubuntu-latest\n    environment:\n      name: github-pages\n      url: ${{ steps.deployment.outputs.page_url }}\n    steps:\n      - uses: actions/deploy-pages@v4\n        id: deployment\nOne-time GitHub setting change required: Repo Settings → Pages → Source: change from “Deploy from branch (gh-pages)” to “GitHub Actions”.\nBuild time drops from ~3-4 minutes (Quarto + Python) to ~20-30 seconds.\n\n\n\n\nExisting GTM container GTM-TJ454JG2 moves to a &lt;script&gt; tag in SEOHead.astro (included in BaseLayout.astro). No GTM container changes needed. Cookie consent handled by a simple localStorage-based vanilla JS banner component.\n\n\n\n\n\nFoundation — Init Astro (empty template), configure integrations, build Header/Footer/BaseLayout, set up Tailwind tokens\nContent Layer — Define collection schemas, migrate both blog posts, build [...slug].astro + BlogCard.astro + /blog/index.astro\nLanding Page — Hero with topo SVG animation, typewriter, bio strip, featured projects, recent posts sections, scroll-reveal\nRemaining Pages — About (with timeline), Projects (with tag filter), Research, Contact, 404\nPolish & Deploy — New deploy.yml, switch Pages source to Actions, SEO/OG tags, image optimization, mobile pass, first deploy\n\n\n\n\n\n\n\n\n\n\n\n\nFile\nAction\n\n\n\n\n.github/workflows/deploy.yml\nReplace entirely with Astro workflow above\n\n\nblog/outdoors/east-coast-trail.qmd\nMigrate to src/content/blog/east-coast-trail.md\n\n\nblog/1.making-quarto-website/quarto-website-tut.qmd\nMigrate with cleanup to src/content/blog/quarto-website-tutorial.md\n\n\nindex.qmd\nSource for bio text and social links to port to landing + about pages\n\n\nstyles.scss\nReference for existing color values (#2C9AB7, #222) to carry forward\n\n\nfiles/Academic_CV_Jan_2026.pdf\nMove to public/files/\n\n\nimages/\nMove all to public/images/\n\n\n\n\n\n\n\n\nnpm run dev locally: all pages render, blog posts display correctly, tag filters work\nnpm run build passes with no errors\nPush to main: GitHub Actions deploy succeeds, site live at https://maxmascini.github.io/\nSitemap at /sitemap-index.xml, RSS at /rss.xml\n404 page works, CV PDF downloads correctly\nMobile: test hero, blog cards, and project grid on 375px viewport"
+  },
+  {
+    "objectID": "PLAN.html#context",
+    "href": "PLAN.html#context",
+    "title": "MinMaxed v2 — Personal Website Rebuild Plan",
+    "section": "",
+    "text": "The current site is built with Quarto (a scientific publishing framework) and hosted on GitHub Pages. While functional, Quarto is heavyweight for a personal site and limits creative control over the visual design. The goal is to replace it with a modern, hand-crafted site with a beautiful interactive landing page, a blog, and a portfolio section — while keeping the same GitHub Pages hosting at https://maxmascini.github.io/."
+  },
+  {
+    "objectID": "PLAN.html#tech-stack-astro",
+    "href": "PLAN.html#tech-stack-astro",
+    "title": "MinMaxed v2 — Personal Website Rebuild Plan",
+    "section": "",
+    "text": "Astro 4.x is the right choice because: - Ships zero JS by default → fast landing page - First-class Markdown/MDX for the blog - File-based routing (one .astro file = one page) - GitHub Pages deployment is fully supported via official actions - Existing .qmd blog posts migrate to .md with minimal changes - Tailwind CSS integrates as a first-party plugin\nKey packages: @astrojs/tailwind, @astrojs/mdx, @astrojs/sitemap, @astrojs/rss, astro-icon, @tailwindcss/typography"
+  },
+  {
+    "objectID": "PLAN.html#design-direction-topographic-intelligence",
+    "href": "PLAN.html#design-direction-topographic-intelligence",
+    "title": "MinMaxed v2 — Personal Website Rebuild Plan",
+    "section": "",
+    "text": "Borrows from two of Max’s worlds: topographic maps (outdoors) and neural network diagrams (neuroscience/AI). Clean, data-forward, dark, with warmth.\n\n\n\n\n\n\n\n\n\n\nRole\nHex\nNotes\n\n\n\n\nBackground\n#1a1a2e\nSlightly blue-shifted from current #222\n\n\nSurface (cards)\n#16213e\nElevated surfaces\n\n\nPrimary accent\n#2C9AB7\nKeep existing teal — it’s the site identity\n\n\nTeal light\n#4fc3f7\nHover states\n\n\nSage green\n#4caf82\nOutdoors/nature context (trail posts, tags)\n\n\nAmber\n#f6a623\nSparingly for CTAs\n\n\nText\n#e8eaf0\nMain body\n\n\nMuted text\n#8892a4\nDates, metadata\n\n\n\n\n\n\n\nHeadings: Inter Variable (clean, modern, technical)\nBody/Blog prose: Source Serif 4 Variable (makes long-form feel intentional)\nCode: JetBrains Mono\n\n\n\n\nRestraint. Animations serve orientation, not decoration: - Scroll reveal: sections fade + translate up via IntersectionObserver (~20 lines JS) - Hero: animated SVG topographic contour lines (CSS stroke-dashoffset animation) - Hover: card lift (translateY(-4px) + shadow) — CSS only - Nav: sticky with backdrop-filter: blur() activating on scroll - No scroll-jacking, no parallax, no page transitions"
+  },
+  {
+    "objectID": "PLAN.html#pages",
+    "href": "PLAN.html#pages",
+    "title": "MinMaxed v2 — Personal Website Rebuild Plan",
+    "section": "",
+    "text": "/              → Landing page (hero + quick bio + featured projects + recent posts)\n/about         → Full bio, timeline, interests, CV download\n/blog          → Blog index with tag filter\n/blog/[slug]   → Individual post (MDX capable)\n/projects      → Portfolio grid with tag filter\n/research      → Research focus, interests, publications (starts sparse)\n/contact       → Email/social links, location\n/404           → Custom 404\n\n\n\nHero — Full viewport, animated SVG topo background, name + typewriter subtitle (“CS Researcher” / “Backpacker” / “Neuroscience Alum”), two CTAs\nQuick Bio Strip — Photo (teal ring), 3-sentence bio, quick stats, social links\nFeatured Work — 2–3 project cards flagged featured: true\nRecent Posts — Latest 2 blog cards\nResearch Teaser — One-liner + link to /research\nFooter — Nav | Social | Copyright\n\n\n\n\n\nFull bio (longer than landing)\nTimeline component: neuroscience undergrad start → first-class honours + neurotechnology cert → ECT thru-hike → MCS start → SURGE role → present\nInterests cards: AI Research | Data Visualization | Backpacking\nCV download button (PDF)\n\n\n\n\n\nTag filter bar (client-side, ~30 lines JS, no library): All | Tutorial | Outdoors | Research\nCard grid: image, date, title, description, tags\nPost pages: reading time estimate, prev/next navigation, tag links\n\n\n\n\n\nProject cards: title, description, tech stack badges, GitHub/live links\nSame tag filter pattern as blog\nProjects defined in src/content/projects/ collection\n\n\n\n\n\nCurrent research area (human-AI interaction, theory of mind)\nResearch interests list\nPublications section (placeholder initially, grows over time)\nDalhousie affiliation, CV link\n\n\n\n\n\n/now page — A short “currently” update (what I’m working on, reading, last trail). Shows the site is alive. Easy to maintain.\nSpeaking/Writing — Add to Research page initially, promote when content grows\nInteractive data viz showcase — Future: embed a D3/Observable trail elevation profile from the ECT using public DEM data. Strong differentiator given the data viz interest.\nUtterances comments — Already configured in Quarto; migrates easily as an Astro script component when ready."
+  },
+  {
+    "objectID": "PLAN.html#folder-structure",
+    "href": "PLAN.html#folder-structure",
+    "title": "MinMaxed v2 — Personal Website Rebuild Plan",
+    "section": "",
+    "text": "MaxMascini.github.io/\n├── .github/workflows/deploy.yml     ← Replace existing Quarto workflow\n├── public/\n│   ├── files/Academic_CV_Jan_2026.pdf\n│   ├── images/{max_kitty_pic.jpg, max_surge_pic.jpg}\n│   └── favicon.ico\n├── src/\n│   ├── components/\n│   │   ├── layout/{Header, Footer, SEOHead}.astro\n│   │   ├── ui/{BlogCard, ProjectCard, TagBadge, TimelineItem, SocialLinks}.astro\n│   │   └── home/{Hero, FeaturedProjects, RecentPosts, TopoBackground}.astro\n│   ├── content/\n│   │   ├── config.ts                ← Content collection schemas\n│   │   ├── blog/\n│   │   │   ├── quarto-website-tutorial.md   ← Migrated from .qmd\n│   │   │   └── east-coast-trail.md          ← Migrated from .qmd\n│   │   └── projects/\n│   │       └── *.md\n│   ├── layouts/{BaseLayout, BlogPostLayout, PageLayout}.astro\n│   ├── pages/\n│   │   ├── index.astro\n│   │   ├── about.astro\n│   │   ├── research.astro\n│   │   ├── contact.astro\n│   │   ├── blog/{index.astro, [...slug].astro}\n│   │   ├── projects/index.astro\n│   │   └── 404.astro\n│   └── styles/global.css\n├── astro.config.mjs\n├── tailwind.config.mjs\n├── package.json\n└── tsconfig.json"
+  },
+  {
+    "objectID": "PLAN.html#blog-migration",
+    "href": "PLAN.html#blog-migration",
+    "title": "MinMaxed v2 — Personal Website Rebuild Plan",
+    "section": "",
+    "text": "Both existing posts migrate from .qmd to .md:\nEast Coast Trail (blog/outdoors/east-coast-trail.qmd) — Near-clean migration: - Fix date format: \"24-11-2024\" → 2024-11-24 - Add a description field - Body prose is standard Markdown — preserves as-is\nQuarto Tutorial (blog/1.making-quarto-website/quarto-website-tut.qmd) — Needs more cleanup: - Remove Quarto-only YAML fields (title-block-banner, execute, comments utterances config) - Replace `r Sys.Date()` with a literal date - Replace {.lightbox} image syntax with standard ![alt](path)"
+  },
+  {
+    "objectID": "PLAN.html#github-actions-deployment",
+    "href": "PLAN.html#github-actions-deployment",
+    "title": "MinMaxed v2 — Personal Website Rebuild Plan",
+    "section": "",
+    "text": "Replace .github/workflows/deploy.yml entirely. New workflow uses the official GitHub Pages API (no gh-pages branch):\nname: Deploy Astro Site\n\non:\n  push:\n    branches: [main]\n  workflow_dispatch:\n\npermissions:\n  contents: read\n  pages: write\n  id-token: write\n\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with: { node-version: 20, cache: npm }\n      - run: npm ci\n      - run: npm run build\n      - uses: actions/upload-pages-artifact@v3\n        with: { path: ./dist }\n\n  deploy:\n    needs: build\n    runs-on: ubuntu-latest\n    environment:\n      name: github-pages\n      url: ${{ steps.deployment.outputs.page_url }}\n    steps:\n      - uses: actions/deploy-pages@v4\n        id: deployment\nOne-time GitHub setting change required: Repo Settings → Pages → Source: change from “Deploy from branch (gh-pages)” to “GitHub Actions”.\nBuild time drops from ~3-4 minutes (Quarto + Python) to ~20-30 seconds."
+  },
+  {
+    "objectID": "PLAN.html#google-analytics",
+    "href": "PLAN.html#google-analytics",
+    "title": "MinMaxed v2 — Personal Website Rebuild Plan",
+    "section": "",
+    "text": "Existing GTM container GTM-TJ454JG2 moves to a &lt;script&gt; tag in SEOHead.astro (included in BaseLayout.astro). No GTM container changes needed. Cookie consent handled by a simple localStorage-based vanilla JS banner component."
+  },
+  {
+    "objectID": "PLAN.html#implementation-order",
+    "href": "PLAN.html#implementation-order",
+    "title": "MinMaxed v2 — Personal Website Rebuild Plan",
+    "section": "",
+    "text": "Foundation — Init Astro (empty template), configure integrations, build Header/Footer/BaseLayout, set up Tailwind tokens\nContent Layer — Define collection schemas, migrate both blog posts, build [...slug].astro + BlogCard.astro + /blog/index.astro\nLanding Page — Hero with topo SVG animation, typewriter, bio strip, featured projects, recent posts sections, scroll-reveal\nRemaining Pages — About (with timeline), Projects (with tag filter), Research, Contact, 404\nPolish & Deploy — New deploy.yml, switch Pages source to Actions, SEO/OG tags, image optimization, mobile pass, first deploy"
+  },
+  {
+    "objectID": "PLAN.html#critical-files-current-repo",
+    "href": "PLAN.html#critical-files-current-repo",
+    "title": "MinMaxed v2 — Personal Website Rebuild Plan",
+    "section": "",
+    "text": "File\nAction\n\n\n\n\n.github/workflows/deploy.yml\nReplace entirely with Astro workflow above\n\n\nblog/outdoors/east-coast-trail.qmd\nMigrate to src/content/blog/east-coast-trail.md\n\n\nblog/1.making-quarto-website/quarto-website-tut.qmd\nMigrate with cleanup to src/content/blog/quarto-website-tutorial.md\n\n\nindex.qmd\nSource for bio text and social links to port to landing + about pages\n\n\nstyles.scss\nReference for existing color values (#2C9AB7, #222) to carry forward\n\n\nfiles/Academic_CV_Jan_2026.pdf\nMove to public/files/\n\n\nimages/\nMove all to public/images/"
+  },
+  {
+    "objectID": "PLAN.html#verification-checklist",
+    "href": "PLAN.html#verification-checklist",
+    "title": "MinMaxed v2 — Personal Website Rebuild Plan",
+    "section": "",
+    "text": "npm run dev locally: all pages render, blog posts display correctly, tag filters work\nnpm run build passes with no errors\nPush to main: GitHub Actions deploy succeeds, site live at https://maxmascini.github.io/\nSitemap at /sitemap-index.xml, RSS at /rss.xml\n404 page works, CV PDF downloads correctly\nMobile: test hero, blog cards, and project grid on 375px viewport"
+  },
+  {
+    "objectID": "TODO.html",
+    "href": "TODO.html",
+    "title": "ToDo list:",
+    "section": "",
+    "text": "ToDo list:\n\nAdd resume & remove job experience stuff from index\n\nAlso add link/mention of blog\n\nComplete how to make a website with Quarto"
+  },
+  {
+    "objectID": "blog/blog_index.html",
+    "href": "blog/blog_index.html",
+    "title": "Welcome to my blog!",
+    "section": "",
+    "text": "Take a look at some of my outdoor adventures, pet projects or tutorials :)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHow to Make a Website with Quarto\n\n\n\nTutorial\n\nQuarto\n\nWebsite\n\n\n\n\n\n\n\nInvalid Date\n\n\n\n\n\n\n\n\n\n\n\nBackbacking the East Coast Trail\n\n\n\nOutdoors\n\nBackpacking\n\nGuide\n\n\n\n\n\n\n\n11 December, 2025\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "blog/outdoors/east-coast-trail.html",
+    "href": "blog/outdoors/east-coast-trail.html",
+    "title": "Backbacking the East Coast Trail",
+    "section": "",
+    "text": "During July-August of 2024, my mother and I undertook a thru-hike of the East Coast Trail - a 360km trail that runs along avalon peninsula on the eastern coast of Newfoundland, Canada. The trail is broken up into 25 sections, each with its own unique challenges and rewards."
+  },
+  {
+    "objectID": "blog/outdoors/east-coast-trail.html#introduction",
+    "href": "blog/outdoors/east-coast-trail.html#introduction",
+    "title": "Backbacking the East Coast Trail",
+    "section": "",
+    "text": "During July-August of 2024, my mother and I undertook a thru-hike of the East Coast Trail - a 360km trail that runs along avalon peninsula on the eastern coast of Newfoundland, Canada. The trail is broken up into 25 sections, each with its own unique challenges and rewards."
+  },
+  {
+    "objectID": "blog/outdoors/east-coast-trail.html#preparation",
+    "href": "blog/outdoors/east-coast-trail.html#preparation",
+    "title": "Backbacking the East Coast Trail",
+    "section": "Preparation",
+    "text": "Preparation\nMany people choose to do the trail in sections, or thru-hike in 10-15 days. We decided to do the trail in 20 days, which allowed us to take our time and enjoy the scenery. We also decided to do the trail north to south, starting in Topsail and ending in Cappahayden. While possible to carry enough food for the entire trip, we decided to plan and execute food drops at several locations along the trail. This allowed us to carry less weight on each section and plan our weight:calorie ratio more effectively."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Max Mascini",
+    "section": "",
+    "text": "Hello, my name is Max Mascini, and welcome to my website!\nI am a Masters of Computer Science student at Dalhousie University in Halifax, Nova Scotia! My research focuses on AI ethics and theory of mind in human-AI interactions. \nI did my undergraduate degree at Dalhousie University 🐯 and graduated with first-class honours in neuroscience and a certificate in neurotechnology & innovation. \nCurrently working as the NeuroTech Programming Specialist at SURGE Innovation. \nMy research interests are at the intersection between the brain, technology and computer science but I also have passions for data visualization, statistics, and AI/machine learning. \nIn my spare time, I love to go on backcountry backpacking and canoe trips. If you have any recommendations for places to go I would love to hear them :D \nReach out anytime: Mascini.max@dal.com"
   },
   {
     "objectID": "blog/1.making-quarto-website/quarto-website-tut.html",
@@ -35,45 +154,10 @@
     "text": "References & Helpful Links\nQuarto Documentation:  - General Quarto Website Documentation  - Website Options  - Built-in Icon Options"
   },
   {
-    "objectID": "TODO.html",
-    "href": "TODO.html",
-    "title": "ToDo list:",
+    "objectID": "about_site.html",
+    "href": "about_site.html",
+    "title": "Max Mascini’s Personal Website",
     "section": "",
-    "text": "ToDo list:\n\nAdd resume & remove job experience stuff from index\n\nAlso add link/mention of blog\n\nComplete how to make a website with Quarto"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Max Mascini",
-    "section": "",
-    "text": "Hello, my name is Max Mascini, and welcome to my website!\nI am a Masters of Computer Science student at Dalhousie University in Halifax, Nova Scotia! My research focuses on AI ethics and theory of mind in human-AI interactions. \nI did my undergraduate degree at Dalhousie University 🐯 and graduated with first-class honours in neuroscience and a certificate in neurotechnology & innovation. \nCurrently working as the NeuroTech Programming Specialist at SURGE Innovation. \nMy research interests are at the intersection between the brain, technology and computer science but I also have passions for data visualization, statistics, and AI/machine learning. \nIn my spare time, I love to go on backcountry backpacking and canoe trips. If you have any recommendations for places to go I would love to hear them :D \nReach out anytime: Mascini.max@dal.com"
-  },
-  {
-    "objectID": "blog/outdoors/east-coast-trail.html",
-    "href": "blog/outdoors/east-coast-trail.html",
-    "title": "Backbacking the East Coast Trail",
-    "section": "",
-    "text": "During July-August of 2024, my mother and I undertook a thru-hike of the East Coast Trail - a 360km trail that runs along avalon peninsula on the eastern coast of Newfoundland, Canada. The trail is broken up into 25 sections, each with its own unique challenges and rewards."
-  },
-  {
-    "objectID": "blog/outdoors/east-coast-trail.html#introduction",
-    "href": "blog/outdoors/east-coast-trail.html#introduction",
-    "title": "Backbacking the East Coast Trail",
-    "section": "",
-    "text": "During July-August of 2024, my mother and I undertook a thru-hike of the East Coast Trail - a 360km trail that runs along avalon peninsula on the eastern coast of Newfoundland, Canada. The trail is broken up into 25 sections, each with its own unique challenges and rewards."
-  },
-  {
-    "objectID": "blog/outdoors/east-coast-trail.html#preparation",
-    "href": "blog/outdoors/east-coast-trail.html#preparation",
-    "title": "Backbacking the East Coast Trail",
-    "section": "Preparation",
-    "text": "Preparation\nMany people choose to do the trail in sections, or thru-hike in 10-15 days. We decided to do the trail in 20 days, which allowed us to take our time and enjoy the scenery. We also decided to do the trail north to south, starting in Topsail and ending in Cappahayden. While possible to carry enough food for the entire trip, we decided to plan and execute food drops at several locations along the trail. This allowed us to carry less weight on each section and plan our weight:calorie ratio more effectively."
-  },
-  {
-    "objectID": "blog/blog_index.html",
-    "href": "blog/blog_index.html",
-    "title": "Welcome to my blog!",
-    "section": "",
-    "text": "Take a look at some of my outdoor adventures, pet projects or tutorials :)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHow to Make a Website with Quarto\n\n\n\nTutorial\n\nQuarto\n\nWebsite\n\n\n\n\n\n\n\nInvalid Date\n\n\n\n\n\n\n\n\n\n\n\nBackbacking the East Coast Trail\n\n\n\nOutdoors\n\nBackpacking\n\nGuide\n\n\n\n\n\n\n\n11 December, 2025\n\n\n\n\n\n\nNo matching items"
+    "text": "Made using Quarto, hosted via Github pages"
   }
 ]

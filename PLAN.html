@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.0">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>plan – MinMaxed</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/cookie-consent/cookie-consent.js"></script>
+<link href="site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-630aa7aed19b34e3f1c420a16f036f79.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-3113ff039c1ef980a7bfe07ffc3eddda.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": true,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=GTM-TJ454JG2"></script>
+
+<script type="text/plain" cookie-consent="tracking">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'GTM-TJ454JG2', { 'anonymize_ip': true});
+</script>
+
+<script type="text/javascript" charset="UTF-8">
+document.addEventListener('DOMContentLoaded', function () {
+cookieconsent.run({
+  "notice_banner_type":"simple",
+  "consent_type":"implied",
+  "palette":"dark",
+  "language":"en",
+  "page_load_consent_levels":["strictly-necessary","functionality","tracking","targeting"],
+  "notice_banner_reject_button_hide":false,
+  "preferences_center_close_button_hide":false,
+  "website_name":""
+  ,
+"language":"en"
+  });
+});
+</script> 
+  
+
+
+<link rel="stylesheet" href="styles.scss">
+<meta property="og:title" content="MinMaxed">
+<meta property="og:site_name" content="MinMaxed">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">MinMaxed</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./blog/blog_index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/max-mascini-562239213/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/maxmascini"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#minmaxed-v2-personal-website-rebuild-plan" id="toc-minmaxed-v2-personal-website-rebuild-plan" class="nav-link active" data-scroll-target="#minmaxed-v2-personal-website-rebuild-plan">MinMaxed v2 — Personal Website Rebuild Plan</a>
+  <ul class="collapse">
+  <li><a href="#context" id="toc-context" class="nav-link" data-scroll-target="#context">Context</a></li>
+  <li><a href="#tech-stack-astro" id="toc-tech-stack-astro" class="nav-link" data-scroll-target="#tech-stack-astro">Tech Stack: Astro</a></li>
+  <li><a href="#design-direction-topographic-intelligence" id="toc-design-direction-topographic-intelligence" class="nav-link" data-scroll-target="#design-direction-topographic-intelligence">Design Direction: “Topographic Intelligence”</a>
+  <ul class="collapse">
+  <li><a href="#color-palette" id="toc-color-palette" class="nav-link" data-scroll-target="#color-palette">Color Palette</a></li>
+  <li><a href="#typography" id="toc-typography" class="nav-link" data-scroll-target="#typography">Typography</a></li>
+  <li><a href="#animation-philosophy" id="toc-animation-philosophy" class="nav-link" data-scroll-target="#animation-philosophy">Animation Philosophy</a></li>
+  </ul></li>
+  <li><a href="#pages" id="toc-pages" class="nav-link" data-scroll-target="#pages">Pages</a>
+  <ul class="collapse">
+  <li><a href="#landing-page-sections" id="toc-landing-page-sections" class="nav-link" data-scroll-target="#landing-page-sections">Landing Page Sections</a></li>
+  <li><a href="#about-page" id="toc-about-page" class="nav-link" data-scroll-target="#about-page">About Page</a></li>
+  <li><a href="#blog" id="toc-blog" class="nav-link" data-scroll-target="#blog">Blog</a></li>
+  <li><a href="#projects" id="toc-projects" class="nav-link" data-scroll-target="#projects">Projects</a></li>
+  <li><a href="#research" id="toc-research" class="nav-link" data-scroll-target="#research">Research</a></li>
+  <li><a href="#additional-suggestions" id="toc-additional-suggestions" class="nav-link" data-scroll-target="#additional-suggestions">Additional Suggestions</a></li>
+  </ul></li>
+  <li><a href="#folder-structure" id="toc-folder-structure" class="nav-link" data-scroll-target="#folder-structure">Folder Structure</a></li>
+  <li><a href="#blog-migration" id="toc-blog-migration" class="nav-link" data-scroll-target="#blog-migration">Blog Migration</a></li>
+  <li><a href="#github-actions-deployment" id="toc-github-actions-deployment" class="nav-link" data-scroll-target="#github-actions-deployment">GitHub Actions Deployment</a></li>
+  <li><a href="#google-analytics" id="toc-google-analytics" class="nav-link" data-scroll-target="#google-analytics">Google Analytics</a></li>
+  <li><a href="#implementation-order" id="toc-implementation-order" class="nav-link" data-scroll-target="#implementation-order">Implementation Order</a></li>
+  <li><a href="#critical-files-current-repo" id="toc-critical-files-current-repo" class="nav-link" data-scroll-target="#critical-files-current-repo">Critical Files (Current Repo)</a></li>
+  <li><a href="#verification-checklist" id="toc-verification-checklist" class="nav-link" data-scroll-target="#verification-checklist">Verification Checklist</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="minmaxed-v2-personal-website-rebuild-plan" class="level1">
+<h1>MinMaxed v2 — Personal Website Rebuild Plan</h1>
+<section id="context" class="level2">
+<h2 class="anchored" data-anchor-id="context">Context</h2>
+<p>The current site is built with Quarto (a scientific publishing framework) and hosted on GitHub Pages. While functional, Quarto is heavyweight for a personal site and limits creative control over the visual design. The goal is to replace it with a modern, hand-crafted site with a beautiful interactive landing page, a blog, and a portfolio section — while keeping the same GitHub Pages hosting at <code>https://maxmascini.github.io/</code>.</p>
+<hr>
+</section>
+<section id="tech-stack-astro" class="level2">
+<h2 class="anchored" data-anchor-id="tech-stack-astro">Tech Stack: Astro</h2>
+<p><strong>Astro 4.x</strong> is the right choice because: - Ships zero JS by default → fast landing page - First-class Markdown/MDX for the blog - File-based routing (one <code>.astro</code> file = one page) - GitHub Pages deployment is fully supported via official actions - Existing <code>.qmd</code> blog posts migrate to <code>.md</code> with minimal changes - Tailwind CSS integrates as a first-party plugin</p>
+<p>Key packages: <code>@astrojs/tailwind</code>, <code>@astrojs/mdx</code>, <code>@astrojs/sitemap</code>, <code>@astrojs/rss</code>, <code>astro-icon</code>, <code>@tailwindcss/typography</code></p>
+<hr>
+</section>
+<section id="design-direction-topographic-intelligence" class="level2">
+<h2 class="anchored" data-anchor-id="design-direction-topographic-intelligence">Design Direction: “Topographic Intelligence”</h2>
+<p>Borrows from two of Max’s worlds: topographic maps (outdoors) and neural network diagrams (neuroscience/AI). Clean, data-forward, dark, with warmth.</p>
+<section id="color-palette" class="level3">
+<h3 class="anchored" data-anchor-id="color-palette">Color Palette</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Role</th>
+<th>Hex</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Background</td>
+<td><code>#1a1a2e</code></td>
+<td>Slightly blue-shifted from current <code>#222</code></td>
+</tr>
+<tr class="even">
+<td>Surface (cards)</td>
+<td><code>#16213e</code></td>
+<td>Elevated surfaces</td>
+</tr>
+<tr class="odd">
+<td>Primary accent</td>
+<td><code>#2C9AB7</code></td>
+<td>Keep existing teal — it’s the site identity</td>
+</tr>
+<tr class="even">
+<td>Teal light</td>
+<td><code>#4fc3f7</code></td>
+<td>Hover states</td>
+</tr>
+<tr class="odd">
+<td>Sage green</td>
+<td><code>#4caf82</code></td>
+<td>Outdoors/nature context (trail posts, tags)</td>
+</tr>
+<tr class="even">
+<td>Amber</td>
+<td><code>#f6a623</code></td>
+<td>Sparingly for CTAs</td>
+</tr>
+<tr class="odd">
+<td>Text</td>
+<td><code>#e8eaf0</code></td>
+<td>Main body</td>
+</tr>
+<tr class="even">
+<td>Muted text</td>
+<td><code>#8892a4</code></td>
+<td>Dates, metadata</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="typography" class="level3">
+<h3 class="anchored" data-anchor-id="typography">Typography</h3>
+<ul>
+<li><strong>Headings:</strong> Inter Variable (clean, modern, technical)</li>
+<li><strong>Body/Blog prose:</strong> Source Serif 4 Variable (makes long-form feel intentional)</li>
+<li><strong>Code:</strong> JetBrains Mono</li>
+</ul>
+</section>
+<section id="animation-philosophy" class="level3">
+<h3 class="anchored" data-anchor-id="animation-philosophy">Animation Philosophy</h3>
+<p>Restraint. Animations serve orientation, not decoration: - Scroll reveal: sections fade + translate up via <code>IntersectionObserver</code> (~20 lines JS) - Hero: animated SVG topographic contour lines (CSS <code>stroke-dashoffset</code> animation) - Hover: card lift (<code>translateY(-4px)</code> + shadow) — CSS only - Nav: sticky with <code>backdrop-filter: blur()</code> activating on scroll - No scroll-jacking, no parallax, no page transitions</p>
+<hr>
+</section>
+</section>
+<section id="pages" class="level2">
+<h2 class="anchored" data-anchor-id="pages">Pages</h2>
+<pre><code>/              → Landing page (hero + quick bio + featured projects + recent posts)
+/about         → Full bio, timeline, interests, CV download
+/blog          → Blog index with tag filter
+/blog/[slug]   → Individual post (MDX capable)
+/projects      → Portfolio grid with tag filter
+/research      → Research focus, interests, publications (starts sparse)
+/contact       → Email/social links, location
+/404           → Custom 404</code></pre>
+<section id="landing-page-sections" class="level3">
+<h3 class="anchored" data-anchor-id="landing-page-sections">Landing Page Sections</h3>
+<ol type="1">
+<li><strong>Hero</strong> — Full viewport, animated SVG topo background, name + typewriter subtitle (“CS Researcher” / “Backpacker” / “Neuroscience Alum”), two CTAs</li>
+<li><strong>Quick Bio Strip</strong> — Photo (teal ring), 3-sentence bio, quick stats, social links</li>
+<li><strong>Featured Work</strong> — 2–3 project cards flagged <code>featured: true</code></li>
+<li><strong>Recent Posts</strong> — Latest 2 blog cards</li>
+<li><strong>Research Teaser</strong> — One-liner + link to <code>/research</code></li>
+<li><strong>Footer</strong> — Nav | Social | Copyright</li>
+</ol>
+</section>
+<section id="about-page" class="level3">
+<h3 class="anchored" data-anchor-id="about-page">About Page</h3>
+<ul>
+<li>Full bio (longer than landing)</li>
+<li><strong>Timeline component</strong>: neuroscience undergrad start → first-class honours + neurotechnology cert → ECT thru-hike → MCS start → SURGE role → present</li>
+<li>Interests cards: AI Research | Data Visualization | Backpacking</li>
+<li>CV download button (PDF)</li>
+</ul>
+</section>
+<section id="blog" class="level3">
+<h3 class="anchored" data-anchor-id="blog">Blog</h3>
+<ul>
+<li>Tag filter bar (client-side, ~30 lines JS, no library): All | Tutorial | Outdoors | Research</li>
+<li>Card grid: image, date, title, description, tags</li>
+<li>Post pages: reading time estimate, prev/next navigation, tag links</li>
+</ul>
+</section>
+<section id="projects" class="level3">
+<h3 class="anchored" data-anchor-id="projects">Projects</h3>
+<ul>
+<li>Project cards: title, description, tech stack badges, GitHub/live links</li>
+<li>Same tag filter pattern as blog</li>
+<li>Projects defined in <code>src/content/projects/</code> collection</li>
+</ul>
+</section>
+<section id="research" class="level3">
+<h3 class="anchored" data-anchor-id="research">Research</h3>
+<ul>
+<li>Current research area (human-AI interaction, theory of mind)</li>
+<li>Research interests list</li>
+<li>Publications section (placeholder initially, grows over time)</li>
+<li>Dalhousie affiliation, CV link</li>
+</ul>
+</section>
+<section id="additional-suggestions" class="level3">
+<h3 class="anchored" data-anchor-id="additional-suggestions">Additional Suggestions</h3>
+<ul>
+<li><strong><code>/now</code> page</strong> — A short “currently” update (what I’m working on, reading, last trail). Shows the site is alive. Easy to maintain.</li>
+<li><strong>Speaking/Writing</strong> — Add to Research page initially, promote when content grows</li>
+<li><strong>Interactive data viz showcase</strong> — Future: embed a D3/Observable trail elevation profile from the ECT using public DEM data. Strong differentiator given the data viz interest.</li>
+<li><strong>Utterances comments</strong> — Already configured in Quarto; migrates easily as an Astro script component when ready.</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="folder-structure" class="level2">
+<h2 class="anchored" data-anchor-id="folder-structure">Folder Structure</h2>
+<pre><code>MaxMascini.github.io/
+├── .github/workflows/deploy.yml     ← Replace existing Quarto workflow
+├── public/
+│   ├── files/Academic_CV_Jan_2026.pdf
+│   ├── images/{max_kitty_pic.jpg, max_surge_pic.jpg}
+│   └── favicon.ico
+├── src/
+│   ├── components/
+│   │   ├── layout/{Header, Footer, SEOHead}.astro
+│   │   ├── ui/{BlogCard, ProjectCard, TagBadge, TimelineItem, SocialLinks}.astro
+│   │   └── home/{Hero, FeaturedProjects, RecentPosts, TopoBackground}.astro
+│   ├── content/
+│   │   ├── config.ts                ← Content collection schemas
+│   │   ├── blog/
+│   │   │   ├── quarto-website-tutorial.md   ← Migrated from .qmd
+│   │   │   └── east-coast-trail.md          ← Migrated from .qmd
+│   │   └── projects/
+│   │       └── *.md
+│   ├── layouts/{BaseLayout, BlogPostLayout, PageLayout}.astro
+│   ├── pages/
+│   │   ├── index.astro
+│   │   ├── about.astro
+│   │   ├── research.astro
+│   │   ├── contact.astro
+│   │   ├── blog/{index.astro, [...slug].astro}
+│   │   ├── projects/index.astro
+│   │   └── 404.astro
+│   └── styles/global.css
+├── astro.config.mjs
+├── tailwind.config.mjs
+├── package.json
+└── tsconfig.json</code></pre>
+<hr>
+</section>
+<section id="blog-migration" class="level2">
+<h2 class="anchored" data-anchor-id="blog-migration">Blog Migration</h2>
+<p>Both existing posts migrate from <code>.qmd</code> to <code>.md</code>:</p>
+<p><strong>East Coast Trail</strong> (<code>blog/outdoors/east-coast-trail.qmd</code>) — Near-clean migration: - Fix date format: <code>"24-11-2024"</code> → <code>2024-11-24</code> - Add a <code>description</code> field - Body prose is standard Markdown — preserves as-is</p>
+<p><strong>Quarto Tutorial</strong> (<code>blog/1.making-quarto-website/quarto-website-tut.qmd</code>) — Needs more cleanup: - Remove Quarto-only YAML fields (<code>title-block-banner</code>, <code>execute</code>, <code>comments</code> utterances config) - Replace <code>`r Sys.Date()`</code> with a literal date - Replace <code>{.lightbox}</code> image syntax with standard <code>![alt](path)</code></p>
+<hr>
+</section>
+<section id="github-actions-deployment" class="level2">
+<h2 class="anchored" data-anchor-id="github-actions-deployment">GitHub Actions Deployment</h2>
+<p>Replace <code>.github/workflows/deploy.yml</code> entirely. New workflow uses the official GitHub Pages API (no <code>gh-pages</code> branch):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> Deploy Astro Site</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">on</span><span class="kw">:</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">push</span><span class="kw">:</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">branches</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">main</span><span class="kw">]</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">workflow_dispatch</span><span class="kw">:</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">permissions</span><span class="kw">:</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">contents</span><span class="kw">:</span><span class="at"> read</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">pages</span><span class="kw">:</span><span class="at"> write</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">id-token</span><span class="kw">:</span><span class="at"> write</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">jobs</span><span class="kw">:</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">build</span><span class="kw">:</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-latest</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v4</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/setup-node@v4</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="at"> </span><span class="fu">node-version</span><span class="kw">:</span><span class="at"> </span><span class="dv">20</span><span class="kw">,</span><span class="at"> </span><span class="fu">cache</span><span class="kw">:</span><span class="at"> npm </span><span class="kw">}</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">run</span><span class="kw">:</span><span class="at"> npm ci</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">run</span><span class="kw">:</span><span class="at"> npm run build</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/upload-pages-artifact@v3</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="at"> </span><span class="fu">path</span><span class="kw">:</span><span class="at"> ./dist </span><span class="kw">}</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">deploy</span><span class="kw">:</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">needs</span><span class="kw">:</span><span class="at"> build</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-latest</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">environment</span><span class="kw">:</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">name</span><span class="kw">:</span><span class="at"> github-pages</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">url</span><span class="kw">:</span><span class="at"> ${{ steps.deployment.outputs.page_url }}</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/deploy-pages@v4</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">id</span><span class="kw">:</span><span class="at"> deployment</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>One-time GitHub setting change required:</strong> Repo Settings → Pages → Source: change from “Deploy from branch (gh-pages)” to “GitHub Actions”.</p>
+<p>Build time drops from ~3-4 minutes (Quarto + Python) to ~20-30 seconds.</p>
+<hr>
+</section>
+<section id="google-analytics" class="level2">
+<h2 class="anchored" data-anchor-id="google-analytics">Google Analytics</h2>
+<p>Existing GTM container <code>GTM-TJ454JG2</code> moves to a <code>&lt;script&gt;</code> tag in <code>SEOHead.astro</code> (included in <code>BaseLayout.astro</code>). No GTM container changes needed. Cookie consent handled by a simple localStorage-based vanilla JS banner component.</p>
+<hr>
+</section>
+<section id="implementation-order" class="level2">
+<h2 class="anchored" data-anchor-id="implementation-order">Implementation Order</h2>
+<ol type="1">
+<li><strong>Foundation</strong> — Init Astro (empty template), configure integrations, build Header/Footer/BaseLayout, set up Tailwind tokens</li>
+<li><strong>Content Layer</strong> — Define collection schemas, migrate both blog posts, build <code>[...slug].astro</code> + <code>BlogCard.astro</code> + <code>/blog/index.astro</code></li>
+<li><strong>Landing Page</strong> — Hero with topo SVG animation, typewriter, bio strip, featured projects, recent posts sections, scroll-reveal</li>
+<li><strong>Remaining Pages</strong> — About (with timeline), Projects (with tag filter), Research, Contact, 404</li>
+<li><strong>Polish &amp; Deploy</strong> — New <code>deploy.yml</code>, switch Pages source to Actions, SEO/OG tags, image optimization, mobile pass, first deploy</li>
+</ol>
+<hr>
+</section>
+<section id="critical-files-current-repo" class="level2">
+<h2 class="anchored" data-anchor-id="critical-files-current-repo">Critical Files (Current Repo)</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>File</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>.github/workflows/deploy.yml</code></td>
+<td>Replace entirely with Astro workflow above</td>
+</tr>
+<tr class="even">
+<td><code>blog/outdoors/east-coast-trail.qmd</code></td>
+<td>Migrate to <code>src/content/blog/east-coast-trail.md</code></td>
+</tr>
+<tr class="odd">
+<td><code>blog/1.making-quarto-website/quarto-website-tut.qmd</code></td>
+<td>Migrate with cleanup to <code>src/content/blog/quarto-website-tutorial.md</code></td>
+</tr>
+<tr class="even">
+<td><code>index.qmd</code></td>
+<td>Source for bio text and social links to port to landing + about pages</td>
+</tr>
+<tr class="odd">
+<td><code>styles.scss</code></td>
+<td>Reference for existing color values (<code>#2C9AB7</code>, <code>#222</code>) to carry forward</td>
+</tr>
+<tr class="even">
+<td><code>files/Academic_CV_Jan_2026.pdf</code></td>
+<td>Move to <code>public/files/</code></td>
+</tr>
+<tr class="odd">
+<td><code>images/</code></td>
+<td>Move all to <code>public/images/</code></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="verification-checklist" class="level2">
+<h2 class="anchored" data-anchor-id="verification-checklist">Verification Checklist</h2>
+<ul class="task-list">
+<li><label><input type="checkbox"><code>npm run dev</code> locally: all pages render, blog posts display correctly, tag filters work</label></li>
+<li><label><input type="checkbox"><code>npm run build</code> passes with no errors</label></li>
+<li><label><input type="checkbox">Push to main: GitHub Actions deploy succeeds, site live at <code>https://maxmascini.github.io/</code></label></li>
+<li><label><input type="checkbox">Sitemap at <code>/sitemap-index.xml</code>, RSS at <code>/rss.xml</code></label></li>
+<li><label><input type="checkbox">404 page works, CV PDF downloads correctly</label></li>
+<li><label><input type="checkbox">Mobile: test hero, blog cards, and project grid on 375px viewport</label></li>
+</ul>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+ Copyright 2025, Max Mascini
+  </li>  
+</ul>
+    </div>   
+    <div class="nav-footer-center">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="./about_site.html">
+<p>About Site</p>
+</a>
+  </li>  
+</ul>
+    <div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
