@@ -1,75 +1,183 @@
 ---
-// Animated topographic contour lines SVG background
+// Real Halifax SRTM elevation data rendered as animated topo contour lines.
+// Data: public/data/halifax-elevation.json (60×38 grid, 44.52–44.80°N)
+// Mouse: hovering raises a peak in the terrain under the cursor.
 ---
 
 <div class="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-  <!-- Layer 1: large slow contours -->
-  <svg
-    class="absolute inset-0 w-full h-full animate-topo-drift"
-    viewBox="0 0 1200 700"
-    preserveAspectRatio="xMidYMid slice"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <g stroke="#2C9AB7" stroke-width="0.8" opacity="0.22">
-      <path d="M-100,200 C150,180 300,220 500,190 C700,160 850,210 1000,195 C1150,180 1250,200 1400,185"/>
-      <path d="M-100,250 C120,230 280,265 480,240 C680,215 830,255 990,238 C1140,221 1240,245 1400,230"/>
-      <path d="M-100,300 C130,285 290,310 490,290 C690,270 840,300 1000,285 C1160,270 1260,290 1400,278"/>
-      <path d="M-100,350 C140,338 300,355 500,342 C700,329 850,348 1010,336 C1170,324 1270,340 1400,330"/>
-      <path d="M-100,400 C150,390 310,405 510,395 C710,385 860,398 1020,388 C1180,378 1280,392 1400,383"/>
-      <path d="M-100,450 C160,443 320,455 520,447 C720,439 870,450 1030,442 C1190,434 1290,446 1400,438"/>
-      <path d="M-100,150 C160,135 320,158 520,142 C720,126 870,150 1030,138 C1190,126 1290,145 1400,132"/>
-      <path d="M-100,100 C170,88 330,108 530,94 C730,80 880,102 1040,90 C1200,78 1300,95 1400,84"/>
-    </g>
-  </svg>
-
-  <!-- Layer 2: tighter contours, different speed -->
-  <svg
-    class="absolute inset-0 w-full h-full animate-topo-drift-2"
-    viewBox="0 0 1200 700"
-    preserveAspectRatio="xMidYMid slice"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <g stroke="#4caf82" stroke-width="0.5" opacity="0.12">
-      <ellipse cx="300" cy="350" rx="280" ry="180" transform="rotate(-15 300 350)"/>
-      <ellipse cx="300" cy="350" rx="240" ry="148" transform="rotate(-15 300 350)"/>
-      <ellipse cx="300" cy="350" rx="200" ry="116" transform="rotate(-15 300 350)"/>
-      <ellipse cx="300" cy="350" rx="160" ry="85" transform="rotate(-15 300 350)"/>
-      <ellipse cx="300" cy="350" rx="120" ry="55" transform="rotate(-15 300 350)"/>
-      <ellipse cx="900" cy="300" rx="220" ry="160" transform="rotate(10 900 300)"/>
-      <ellipse cx="900" cy="300" rx="180" ry="125" transform="rotate(10 900 300)"/>
-      <ellipse cx="900" cy="300" rx="140" ry="92" transform="rotate(10 900 300)"/>
-      <ellipse cx="900" cy="300" rx="100" ry="62" transform="rotate(10 900 300)"/>
-      <ellipse cx="650" cy="520" rx="190" ry="120" transform="rotate(-8 650 520)"/>
-      <ellipse cx="650" cy="520" rx="150" ry="90" transform="rotate(-8 650 520)"/>
-      <ellipse cx="650" cy="520" rx="110" ry="62" transform="rotate(-8 650 520)"/>
-    </g>
-  </svg>
-
-  <!-- Layer 3: subtle diagonal lines -->
-  <svg
-    class="absolute inset-0 w-full h-full animate-topo-drift-3"
-    viewBox="0 0 1200 700"
-    preserveAspectRatio="xMidYMid slice"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <g stroke="#2C9AB7" stroke-width="0.4" opacity="0.1">
-      <path d="M0,600 C200,540 400,580 600,520 C800,460 1000,510 1200,470"/>
-      <path d="M0,560 C200,505 400,542 600,485 C800,428 1000,474 1200,436"/>
-      <path d="M0,520 C200,468 400,502 600,448 C800,394 1000,438 1200,402"/>
-      <path d="M200,650 C350,620 500,640 650,615 C800,590 950,605 1100,580"/>
-      <path d="M-50,480 C100,455 250,470 400,448 C550,426 700,440 850,420 C1000,400 1150,412 1300,394"/>
-    </g>
-  </svg>
-
-  <!-- Radial gradient overlay to fade edges -->
+  <canvas id="topo-canvas" class="absolute inset-0 w-full h-full"></canvas>
+  <!-- Radial gradient overlay — fades edges to background colour -->
   <div class="absolute inset-0 bg-radial-fade"></div>
 </div>
 
 <style>
   .bg-radial-fade {
-    background: radial-gradient(ellipse at center, transparent 30%, #1a1a2e 100%);
+    background: radial-gradient(ellipse at center, transparent 25%, #1a1a2e 85%);
   }
 </style>
+
+<script>
+(async () => {
+  const canvas = document.getElementById('topo-canvas') as HTMLCanvasElement;
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d')!;
+
+  // ── Load elevation data ──────────────────────────────────
+  let elevGrid: number[][] = [];
+  let GRID_W = 30, GRID_H = 20;
+
+  try {
+    const res = await fetch('/data/halifax-elevation.json');
+    const json = await res.json();
+    GRID_W = json.grid_w;
+    GRID_H = json.grid_h;
+    const flat: number[] = json.elevation;
+    for (let r = 0; r < GRID_H; r++) {
+      elevGrid[r] = flat.slice(r * GRID_W, (r + 1) * GRID_W);
+    }
+  } catch {
+    // Fallback: simple noise grid so the page never breaks
+    for (let r = 0; r < GRID_H; r++) {
+      elevGrid[r] = [];
+      for (let c = 0; c < GRID_W; c++) {
+        elevGrid[r][c] =
+          Math.sin(c / GRID_W * 6 + r / GRID_H * 4) * 0.5 +
+          Math.cos(c / GRID_W * 3 - r / GRID_H * 7) * 0.5;
+      }
+    }
+  }
+
+  // ── Mouse tracking (on parent section) ──────────────────
+  let tmx = -999, tmy = -999;   // target (raw)
+  let  mx = -999,  my = -999;   // smoothed
+
+  const hero = canvas.closest('section');
+  if (hero) {
+    hero.addEventListener('mousemove', (e: Event) => {
+      const ev = e as MouseEvent;
+      const r = (hero as HTMLElement).getBoundingClientRect();
+      tmx = ev.clientX - r.left;
+      tmy = ev.clientY - r.top;
+    });
+    hero.addEventListener('mouseleave', () => { tmx = -999; tmy = -999; });
+  }
+
+  // ── Bilinear sample with tiny ambient drift ─────────────
+  let t = 0;
+  function sampleElev(fc: number, fr: number): number {
+    const drift = 0.014;
+    const wc = fc + (Math.sin(fc * 0.9 + fr * 1.1 + t * 0.4) +
+                     Math.cos(fc * 1.8 - fr * 0.7 + t * 0.28) * 0.5) * drift;
+    const wr = fr + (Math.cos(fc * 0.7 + fr * 1.2 - t * 0.36) +
+                     Math.sin(fc * 1.5 + fr * 0.9 + t * 0.20) * 0.5) * drift;
+
+    const c0 = Math.max(0, Math.min(GRID_W - 2, Math.floor(wc)));
+    const r0 = Math.max(0, Math.min(GRID_H - 2, Math.floor(wr)));
+    const tx = wc - c0, ty = wr - r0;
+
+    return elevGrid[r0    ][c0    ] * (1 - tx) * (1 - ty)
+         + elevGrid[r0    ][c0 + 1] *      tx  * (1 - ty)
+         + elevGrid[r0 + 1][c0    ] * (1 - tx) *      ty
+         + elevGrid[r0 + 1][c0 + 1] *      tx  *      ty;
+  }
+
+  // ── Marching squares ────────────────────────────────────
+  function march(
+    grid: number[][], cols: number, rows: number,
+    cw: number, ch: number, level: number
+  ) {
+    const lerp = (a: number, b: number, v: number) => (v - a) / (b - a);
+    ctx.beginPath();
+    for (let r = 0; r < rows - 1; r++) {
+      for (let c = 0; c < cols - 1; c++) {
+        const tl = grid[r    ][c    ], tr = grid[r    ][c + 1];
+        const bl = grid[r + 1][c    ], br = grid[r + 1][c + 1];
+        const x0 = c * cw, y0 = r * ch, x1 = x0 + cw, y1 = y0 + ch;
+        const idx = (tl > level ? 8 : 0) | (tr > level ? 4 : 0)
+                  | (br > level ? 2 : 0) | (bl > level ? 1 : 0);
+        if (!idx || idx === 15) continue;
+        const tp = lerp(tl, tr, level), rp = lerp(tr, br, level);
+        const bp = lerp(bl, br, level), lp = lerp(tl, bl, level);
+        const p: Record<string, [number, number]> = {
+          T: [x0 + tp * cw, y0], R: [x1, y0 + rp * ch],
+          B: [x0 + bp * cw, y1], L: [x0, y0 + lp * ch],
+        };
+        const segs: Record<number, [string, string][]> = {
+          1:[['L','B']], 2:[['B','R']], 3:[['L','R']], 4:[['T','R']],
+          5:[['T','L'],['B','R']], 6:[['T','B']], 7:[['T','L']],
+          8:[['T','L']], 9:[['T','B']], 10:[['T','R'],['L','B']],
+          11:[['T','R']], 12:[['L','R']], 13:[['B','R']], 14:[['L','B']],
+        };
+        (segs[idx] ?? []).forEach(([a, b]) => {
+          ctx.moveTo(p[a][0], p[a][1]);
+          ctx.lineTo(p[b][0], p[b][1]);
+        });
+      }
+    }
+    ctx.stroke();
+  }
+
+  // ── Render constants ────────────────────────────────────
+  const RC = 90, RR = 56;   // render grid resolution
+  const N_CONTOURS = 20;
+
+  // ── Main loop ───────────────────────────────────────────
+  function draw() {
+    const W = canvas.offsetWidth, H = canvas.offsetHeight;
+    if (canvas.width !== W || canvas.height !== H) {
+      canvas.width = W; canvas.height = H;
+    }
+
+    // Smooth mouse follow
+    if (tmx < 0) {
+      mx += (-999 - mx) * 0.06;
+      my += (-999 - my) * 0.06;
+    } else {
+      mx += (tmx - mx) * 0.09;
+      my += (tmy - my) * 0.09;
+    }
+
+    ctx.clearRect(0, 0, W, H);
+
+    const cw = W / (RC - 1), ch = H / (RR - 1);
+
+    // Build render grid
+    const grid: number[][] = [];
+    for (let r = 0; r < RR; r++) {
+      grid[r] = [];
+      for (let c = 0; c < RC; c++) {
+        const fc = (c / (RC - 1)) * (GRID_W - 1);
+        const fr = (r / (RR - 1)) * (GRID_H - 1);
+        let v = sampleElev(fc, fr);
+
+        // Raise a peak under the cursor
+        if (mx > 0) {
+          const px = c * cw, py = r * ch;
+          const dist = Math.sqrt((px - mx) ** 2 + (py - my) ** 2);
+          const inf = Math.max(0, 1 - dist / (W * 0.17));
+          v += inf * inf * 1.9;
+        }
+
+        grid[r][c] = v;
+      }
+    }
+
+    // Draw contour levels
+    for (let i = 0; i <= N_CONTOURS; i++) {
+      const level = -1 + (i / N_CONTOURS) * 2;
+      const isIndex = i % 4 === 0;
+      ctx.strokeStyle = `rgba(76,175,130,${isIndex ? 0.48 : 0.18})`;
+      ctx.lineWidth   = isIndex ? 0.9 : 0.5;
+      ctx.lineJoin    = 'round';
+      ctx.lineCap     = 'round';
+      march(grid, RC, RR, cw, ch, level);
+    }
+
+    t += 0.004;
+    requestAnimationFrame(draw);
+  }
+
+  // ── Kick off ─────────────────────────────────────────────
+  draw();
+})();
+</script>

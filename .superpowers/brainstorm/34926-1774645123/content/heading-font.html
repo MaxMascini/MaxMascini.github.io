@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@200;300;400;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #07070e; color: #e8eaf0; font-family: 'Segoe UI', sans-serif; padding: 28px; }
+  h2 { font-size: 18px; font-weight: 500; margin-bottom: 6px; }
+  .subtitle { color: #8892a4; font-size: 13px; margin-bottom: 28px; }
+
+  .grid { display: flex; flex-direction: column; gap: 10px; }
+
+  .card {
+    border: 2px solid #1e2a3a; border-radius: 12px; overflow: hidden;
+    cursor: pointer; transition: border-color 0.15s; background: #0d0d1a;
+    display: flex; align-items: stretch;
+  }
+  .card:hover { border-color: #2C9AB7; }
+  .card.selected { border-color: #4caf82; box-shadow: 0 0 0 1px #4caf82; }
+
+  .preview {
+    flex: 1; padding: 20px 28px;
+    display: flex; flex-direction: column; justify-content: center; gap: 6px;
+    border-right: 1px solid #1e2a3a;
+  }
+
+  .nav-label { font-size: 11px; color: #8892a4; letter-spacing: 1px; }
+
+  .meta { width: 180px; padding: 16px 20px; display: flex; flex-direction: column; justify-content: center; gap: 4px; flex-shrink: 0; }
+  .font-name { font-size: 12px; color: #4caf82; font-family: monospace; }
+  .font-detail { font-size: 11px; color: #8892a4; line-height: 1.5; }
+
+  /* Current */
+  .syne-800  { font-family: 'Syne', sans-serif; font-weight: 800; }
+  .syne-600  { font-family: 'Syne', sans-serif; font-weight: 600; }
+  .syne-500  { font-family: 'Syne', sans-serif; font-weight: 500; }
+  .outfit-300 { font-family: 'Outfit', sans-serif; font-weight: 300; }
+  .outfit-600 { font-family: 'Outfit', sans-serif; font-weight: 600; }
+  .sg-500    { font-family: 'Space Grotesk', sans-serif; font-weight: 500; }
+  .sg-600    { font-family: 'Space Grotesk', sans-serif; font-weight: 600; }
+  .dm-300    { font-family: 'DM Sans', sans-serif; font-weight: 300; }
+  .dm-500    { font-family: 'DM Sans', sans-serif; font-weight: 500; }
+  .jkt-200   { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 200; }
+  .jkt-600   { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<h2>How should the headings look?</h2>
+<p class="subtitle">Each row shows: site logo (MinMaxed) + hero name (Max Mascini) + typewriter line. Click your favourite.</p>
+
+<div class="grid">
+
+  <!-- Current: Syne 800 — probably what looks bad -->
+  <div class="card" id="card-a" onclick="selectCard('a')">
+    <div class="preview">
+      <div class="nav-label syne-800" style="font-size:13px;letter-spacing:-0.5px;color:#e8eaf0;">Min<span style="color:#2C9AB7">Max</span>ed</div>
+      <div class="syne-800" style="font-size:38px;color:#e8eaf0;letter-spacing:-2px;line-height:1;">Max Mascini</div>
+      <div class="syne-800" style="font-size:14px;color:#2C9AB7;letter-spacing:1px;">CS Researcher</div>
+    </div>
+    <div class="meta">
+      <div class="font-name">Syne 800 (current)</div>
+      <div class="font-detail">Heavy, geometric.<br>Might feel too loud.</div>
+    </div>
+  </div>
+
+  <!-- Option B: Syne 500 — same font, lighter -->
+  <div class="card" id="card-b" onclick="selectCard('b')">
+    <div class="preview">
+      <div class="nav-label syne-500" style="font-size:13px;letter-spacing:-0.5px;color:#e8eaf0;">Min<span style="color:#2C9AB7">Max</span>ed</div>
+      <div class="syne-500" style="font-size:38px;color:#e8eaf0;letter-spacing:-2px;line-height:1;">Max Mascini</div>
+      <div class="syne-500" style="font-size:14px;color:#2C9AB7;letter-spacing:1px;">CS Researcher</div>
+    </div>
+    <div class="meta">
+      <div class="font-name">Syne 500</div>
+      <div class="font-detail">Same font, lighter weight. Keeps existing feel without the heaviness.</div>
+    </div>
+  </div>
+
+  <!-- Option C: Outfit 300 — thin, clean, editorial -->
+  <div class="card" id="card-c" onclick="selectCard('c')">
+    <div class="preview">
+      <div class="nav-label outfit-600" style="font-size:13px;letter-spacing:0px;color:#e8eaf0;">Min<span style="color:#2C9AB7">Max</span>ed</div>
+      <div class="outfit-300" style="font-size:40px;color:#e8eaf0;letter-spacing:-1.5px;line-height:1;">Max Mascini</div>
+      <div class="outfit-300" style="font-size:14px;color:#2C9AB7;letter-spacing:2px;">CS Researcher</div>
+    </div>
+    <div class="meta">
+      <div class="font-name">Outfit 300</div>
+      <div class="font-detail">Thin, airy, editorial. Sophisticated without trying hard.</div>
+    </div>
+  </div>
+
+  <!-- Option D: Space Grotesk 500 — techy but not heavy -->
+  <div class="card" id="card-d" onclick="selectCard('d')">
+    <div class="preview">
+      <div class="nav-label sg-600" style="font-size:13px;color:#e8eaf0;">Min<span style="color:#2C9AB7">Max</span>ed</div>
+      <div class="sg-500" style="font-size:38px;color:#e8eaf0;letter-spacing:-1.5px;line-height:1;">Max Mascini</div>
+      <div class="sg-500" style="font-size:14px;color:#2C9AB7;letter-spacing:2px;">CS Researcher</div>
+    </div>
+    <div class="meta">
+      <div class="font-name">Space Grotesk 500</div>
+      <div class="font-detail">Quirky geometry, medium weight. Techy and approachable.</div>
+    </div>
+  </div>
+
+  <!-- Option E: Plus Jakarta Sans — thin name, bold logo contrast -->
+  <div class="card" id="card-e" onclick="selectCard('e')">
+    <div class="preview">
+      <div class="nav-label jkt-600" style="font-size:13px;color:#e8eaf0;letter-spacing:-0.3px;">Min<span style="color:#2C9AB7">Max</span>ed</div>
+      <div class="jkt-200" style="font-size:42px;color:#e8eaf0;letter-spacing:-2px;line-height:1;">Max Mascini</div>
+      <div class="jkt-200" style="font-size:14px;color:#2C9AB7;letter-spacing:3px;text-transform:uppercase;">CS Researcher</div>
+    </div>
+    <div class="meta">
+      <div class="font-name">Plus Jakarta 200</div>
+      <div class="font-detail">Ultralight name, bold logo — high contrast within one font. Very editorial.</div>
+    </div>
+  </div>
+
+  <!-- Option F: DM Sans — neutral, invisible, name just reads cleanly -->
+  <div class="card" id="card-f" onclick="selectCard('f')">
+    <div class="preview">
+      <div class="nav-label dm-500" style="font-size:13px;color:#e8eaf0;letter-spacing:0px;">Min<span style="color:#2C9AB7">Max</span>ed</div>
+      <div class="dm-300" style="font-size:40px;color:#e8eaf0;letter-spacing:-1.5px;line-height:1;">Max Mascini</div>
+      <div class="dm-300" style="font-size:14px;color:#2C9AB7;letter-spacing:2px;">CS Researcher</div>
+    </div>
+    <div class="meta">
+      <div class="font-name">DM Sans 300</div>
+      <div class="font-detail">Quietly professional. Lets the content breathe. Nothing fights for attention.</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function selectCard(id) {
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('card-' + id).classList.add('selected');
+  if (window.__companion) window.__companion.select(id);
+}
+</script>
+</body>
+</html>

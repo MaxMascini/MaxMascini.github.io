@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Halifax Topo</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #07070e; color: #e8eaf0; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 24px; }
+  #status { font-size: 13px; color: #4caf82; font-family: monospace; margin-bottom: 16px; min-height: 20px; letter-spacing: 1px; }
+  #container { position: relative; width: min(900px, 100%); aspect-ratio: 16/9; border: 1px solid #1e2a3a; border-radius: 12px; overflow: hidden; cursor: crosshair; }
+  canvas { position: absolute; top:0; left:0; width:100%; height:100%; display:block; }
+  #label {
+    position: absolute; bottom: 12px; left: 16px;
+    font-size: 11px; color: rgba(76,175,130,0.5); font-family: monospace;
+    letter-spacing: 2px; text-transform: uppercase; pointer-events: none;
+  }
+  #coords {
+    position: absolute; top: 12px; right: 14px;
+    font-size: 10px; color: rgba(136,146,164,0.4); font-family: monospace;
+    pointer-events: none;
+  }
+  .controls {
+    margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+  }
+  button {
+    padding: 7px 16px; border-radius: 8px; border: 1px solid #2a3a4a;
+    background: #16213e; color: #8892a4; font-size: 12px; cursor: pointer;
+    transition: all 0.15s; font-family: monospace;
+  }
+  button:hover { border-color: #4caf82; color: #4caf82; }
+  button.active { border-color: #4caf82; color: #4caf82; background: rgba(76,175,130,0.1); }
+</style>
+</head>
+<body>
+
+<div id="status">▶ fetching Halifax elevation data…</div>
+
+<div id="container">
+  <canvas id="topo-canvas"></canvas>
+  <div id="label">Halifax, Nova Scotia — 44.6°N 63.6°W</div>
+  <div id="coords"></div>
+</div>
+
+<div class="controls">
+  <button id="btn-ambient" onclick="setMode('ambient')">Ambient drift</button>
+  <button id="btn-peak"    onclick="setMode('peak')" class="active">Hover: raise peak</button>
+  <button id="btn-reveal"  onclick="setMode('reveal')">Hover: reveal</button>
+</div>
+
+<script>
+// ── Halifax bounding box ──────────────────────────────────
+// Covers the peninsula, Bedford Basin, NW Arm, Dartmouth
+const BOUNDS = {
+  latMin: 44.580, latMax: 44.740,
+  lonMin: -63.720, lonMax: -63.480,
+};
+const GRID_W = 32, GRID_H = 20;   // 640 points total → 7 batched requests
+
+let elevGrid = null;  // will hold GRID_H × GRID_W array once loaded
+let mode = 'peak';
+let mx = -999, my = -999, tmx = -999, tmy = -999;
+let t = 0;
+const canvas = document.getElementById('topo-canvas');
+const ctx = canvas.getContext('2d');
+const container = document.getElementById('container');
+const status = document.getElementById('status');
+const coordsEl = document.getElementById('coords');
+
+function setMode(m) {
+  mode = m;
+  document.querySelectorAll('.controls button').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-' + m).classList.add('active');
+}
+
+// ── Fetch real elevation data from Open-Meteo elevation API ──
+// Open-Meteo's elevation endpoint is CORS-open, no key needed
+async function fetchElevation() {
+  const lats = [], lons = [];
+  for (let r = 0; r < GRID_H; r++) {
+    for (let c = 0; c < GRID_W; c++) {
+      lats.push(BOUNDS.latMin + (r / (GRID_H - 1)) * (BOUNDS.latMax - BOUNDS.latMin));
+      lons.push(BOUNDS.lonMin + (c / (GRID_W - 1)) * (BOUNDS.lonMax - BOUNDS.lonMin));
+    }
+  }
+
+  const total = lats.length;
+  const BATCH = 100;
+  const allElev = [];
+  let loaded = 0;
+
+  for (let i = 0; i < total; i += BATCH) {
+    const bLats = lats.slice(i, i + BATCH);
+    const bLons = lons.slice(i, i + BATCH);
+    const url = `https://api.open-meteo.com/v1/elevation?latitude=${bLats.join(',')}&longitude=${bLons.join(',')}`;
+    const res = await fetch(url);
+    const json = await res.json();
+    allElev.push(...json.elevation);
+    loaded += bLats.length;
+    status.textContent = `▶ loading elevation data… ${loaded}/${total} points`;
+  }
+
+  // Build 2D grid, clamp sea/ocean to 0
+  elevGrid = [];
+  for (let r = 0; r < GRID_H; r++) {
+    elevGrid[r] = [];
+    for (let c = 0; c < GRID_W; c++) {
+      elevGrid[r][c] = Math.max(0, allElev[r * GRID_W + c]);
+    }
+  }
+
+  // Normalise to [-1, 1]
+  let minE = Infinity, maxE = -Infinity;
+  elevGrid.flat().forEach(v => { if (v < minE) minE = v; if (v > maxE) maxE = v; });
+  for (let r = 0; r < GRID_H; r++)
+    for (let c = 0; c < GRID_W; c++)
+      elevGrid[r][c] = ((elevGrid[r][c] - minE) / (maxE - minE)) * 2 - 1;
+
+  status.textContent = `✓ Halifax terrain loaded — ${minE.toFixed(0)}m – ${maxE.toFixed(0)}m elevation`;
+  return true;
+}
+
+// ── Smooth interpolation helpers ──────────────────────────
+function smoothstep(a, b, t) { t = Math.max(0, Math.min(1, (t-a)/(b-a))); return t*t*(3-2*t); }
+
+// Bicubic-ish sample from elevation grid with smooth drift
+function sampleElev(fc, fr, t) {
+  // fc, fr are fractional grid coords
+  // Add tiny organic drift so it feels alive
+  const drift = 0.018;
+  const warpX = Math.sin(fc * 0.9 + fr * 1.1 + t * 0.4) * drift +
+                Math.cos(fc * 1.8 - fr * 0.7 + t * 0.25) * drift * 0.5;
+  const warpY = Math.cos(fc * 0.7 + fr * 1.3 - t * 0.35) * drift +
+                Math.sin(fc * 1.5 + fr * 0.9 + t * 0.18) * drift * 0.5;
+
+  const sc = fc + warpX * (GRID_W - 1);
+  const sr = fr + warpY * (GRID_H - 1);
+
+  const c0 = Math.max(0, Math.min(GRID_W - 2, Math.floor(sc)));
+  const r0 = Math.max(0, Math.min(GRID_H - 2, Math.floor(sr)));
+  const tx = sc - c0, ty = sr - r0;
+
+  const v00 = elevGrid[r0    ][c0    ];
+  const v10 = elevGrid[r0    ][c0 + 1];
+  const v01 = elevGrid[r0 + 1][c0    ];
+  const v11 = elevGrid[r0 + 1][c0 + 1];
+
+  return v00*(1-tx)*(1-ty) + v10*tx*(1-ty) + v01*(1-tx)*ty + v11*tx*ty;
+}
+
+// ── Marching squares ──────────────────────────────────────
+function marchingSquares(ctx, grid, cols, rows, cellW, cellH, level) {
+  function lerp(a, b, v) { return (v - a) / (b - a); }
+  ctx.beginPath();
+  for (let r = 0; r < rows - 1; r++) {
+    for (let c = 0; c < cols - 1; c++) {
+      const tl = grid[r    ][c    ], tr = grid[r    ][c + 1];
+      const bl = grid[r + 1][c    ], br = grid[r + 1][c + 1];
+      const x0 = c * cellW, y0 = r * cellH, x1 = x0+cellW, y1 = y0+cellH;
+      const idx = (tl>level?8:0)|(tr>level?4:0)|(br>level?2:0)|(bl>level?1:0);
+      if (idx===0||idx===15) continue;
+      const top    = lerp(tl, tr, level);
+      const right  = lerp(tr, br, level);
+      const bottom = lerp(bl, br, level);
+      const left   = lerp(tl, bl, level);
+      const pts = {
+        T:[x0+top*cellW,y0], R:[x1,y0+right*cellH],
+        B:[x0+bottom*cellW,y1], L:[x0,y0+left*cellH]
+      };
+      const segs = {
+        1:[['L','B']],2:[['B','R']],3:[['L','R']],4:[['T','R']],
+        5:[['T','L'],['B','R']],6:[['T','B']],7:[['T','L']],
+        8:[['T','L']],9:[['T','B']],10:[['T','R'],['L','B']],
+        11:[['T','R']],12:[['L','R']],13:[['B','R']],14:[['L','B']]
+      };
+      (segs[idx]||[]).forEach(([a,b]) => {
+        ctx.moveTo(pts[a][0],pts[a][1]);
+        ctx.lineTo(pts[b][0],pts[b][1]);
+      });
+    }
+  }
+  ctx.stroke();
+}
+
+// ── Main render loop ──────────────────────────────────────
+const RENDER_COLS = 80, RENDER_ROWS = 50;
+
+function buildRenderGrid(W, H) {
+  const cellW = W / (RENDER_COLS - 1);
+  const cellH = H / (RENDER_ROWS - 1);
+  const grid = [];
+
+  for (let r = 0; r < RENDER_ROWS; r++) {
+    grid[r] = [];
+    for (let c = 0; c < RENDER_COLS; c++) {
+      // Map render cell → fractional elevation grid coord
+      const fc = c / (RENDER_COLS - 1) * (GRID_W - 1);
+      const fr = r / (RENDER_ROWS - 1) * (GRID_H - 1);
+      let v = sampleElev(fc, fr, t);
+
+      // Mouse peak modifier
+      if (mode === 'peak' && mx >= 0) {
+        const px = c * cellW, py = r * cellH;
+        const dist = Math.sqrt((px-mx)**2 + (py-my)**2);
+        const inf = Math.max(0, 1 - dist / (W * 0.18));
+        v += inf * inf * 1.6;
+      }
+
+      grid[r][c] = v;
+    }
+  }
+  return grid;
+}
+
+function draw() {
+  const W = container.offsetWidth;
+  const H = container.offsetHeight;
+  canvas.width = W; canvas.height = H;
+
+  if (!elevGrid) { requestAnimationFrame(draw); return; }
+
+  // Smooth mouse
+  mx += ((tmx < 0 ? -999 : tmx) - mx) * 0.10;
+  my += ((tmy < 0 ? -999 : tmy) - my) * 0.10;
+
+  ctx.clearRect(0, 0, W, H);
+
+  const grid = buildRenderGrid(W, H);
+  const cellW = W / (RENDER_COLS - 1);
+  const cellH = H / (RENDER_ROWS - 1);
+
+  const NUM_CONTOURS = 16;
+
+  for (let i = 0; i <= NUM_CONTOURS; i++) {
+    const level = -1 + (i / NUM_CONTOURS) * 2;
+    const isIndex = (i % 4 === 0);
+
+    let alpha = isIndex ? 0.55 : 0.22;
+    let lineWidth = isIndex ? 1.1 : 0.55;
+
+    if (mode === 'reveal') {
+      alpha = isIndex ? 0.07 : 0.03;
+      lineWidth = isIndex ? 0.9 : 0.5;
+    }
+
+    ctx.strokeStyle = `rgba(76,175,130,${alpha})`;
+    ctx.lineWidth = lineWidth;
+    ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    marchingSquares(ctx, grid, RENDER_COLS, RENDER_ROWS, cellW, cellH, level);
+  }
+
+  // Reveal overdraw near cursor
+  if (mode === 'reveal' && mx >= 0) {
+    const R = W * 0.15;
+    for (let i = 0; i <= NUM_CONTOURS; i++) {
+      const level = -1 + (i / NUM_CONTOURS) * 2;
+      const isIndex = (i % 4 === 0);
+      ctx.save();
+      ctx.beginPath(); ctx.arc(mx, my, R, 0, Math.PI*2); ctx.clip();
+      ctx.strokeStyle = `rgba(76,175,130,${isIndex ? 0.70 : 0.38})`;
+      ctx.lineWidth = isIndex ? 1.2 : 0.65;
+      marchingSquares(ctx, grid, RENDER_COLS, RENDER_ROWS, cellW, cellH, level);
+      ctx.restore();
+    }
+    const g = ctx.createRadialGradient(mx,my,0,mx,my,R);
+    g.addColorStop(0,'rgba(76,175,130,0.05)');
+    g.addColorStop(1,'rgba(76,175,130,0.00)');
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(mx,my,R,0,Math.PI*2); ctx.fill();
+  }
+
+  t += 0.004;
+  requestAnimationFrame(draw);
+}
+
+// ── Mouse tracking ────────────────────────────────────────
+container.addEventListener('mousemove', e => {
+  const r = container.getBoundingClientRect();
+  tmx = e.clientX - r.left; tmy = e.clientY - r.top;
+  // Show lat/lon
+  const lat = BOUNDS.latMax - (tmy / container.offsetHeight) * (BOUNDS.latMax - BOUNDS.latMin);
+  const lon = BOUNDS.lonMin + (tmx / container.offsetWidth)  * (BOUNDS.lonMax - BOUNDS.lonMin);
+  coordsEl.textContent = `${lat.toFixed(4)}°N  ${Math.abs(lon).toFixed(4)}°W`;
+});
+container.addEventListener('mouseleave', () => { tmx = -999; tmy = -999; coordsEl.textContent = ''; });
+
+// ── Boot ──────────────────────────────────────────────────
+fetchElevation().then(() => { draw(); }).catch(err => {
+  status.textContent = `✗ fetch failed: ${err.message}`;
+  // Fallback: synthesise a Halifax-ish terrain
+  elevGrid = [];
+  for (let r = 0; r < GRID_H; r++) {
+    elevGrid[r] = [];
+    for (let c = 0; c < GRID_W; c++) {
+      const x = c/(GRID_W-1)*6, y = r/(GRID_H-1)*4;
+      elevGrid[r][c] =
+        Math.sin(x*1.1+y*0.9)*0.4 + Math.cos(x*2.3-y*1.7)*0.3 +
+        Math.sin(x*0.5+y*2.1)*0.2 + Math.cos(x*3.7+y*0.8)*0.1;
+    }
+  }
+  status.textContent = '⚠ using synthetic fallback — check console';
+  draw();
+});
+</script>
+</body>
+</html>

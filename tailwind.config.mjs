@@ -28,8 +28,8 @@ export default {
         },
       },
       fontFamily: {
-        display: ['"Syne"', 'sans-serif'],
-        sans: ['"Syne"', 'sans-serif'],
+        display: ['"Outfit"', 'sans-serif'],
+        sans: ['"Outfit"', 'sans-serif'],
         serif: ['"Lora"', 'Georgia', 'serif'],
         mono: ['"Fira Code"', '"JetBrains Mono"', 'monospace'],
       },

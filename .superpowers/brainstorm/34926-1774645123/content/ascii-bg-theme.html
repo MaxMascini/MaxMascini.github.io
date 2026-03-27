@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASCII Background Theme</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f0f1a; color: #e8eaf0; font-family: 'Segoe UI', sans-serif; padding: 24px; }
+  h2 { font-size: 20px; font-weight: 600; margin-bottom: 6px; }
+  .subtitle { color: #8892a4; font-size: 14px; margin-bottom: 28px; }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .card {
+    border: 2px solid #1e2a3a;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.1s;
+    background: #16213e;
+  }
+  .card:hover { border-color: #2C9AB7; transform: translateY(-2px); }
+  .card.selected { border-color: #2C9AB7; box-shadow: 0 0 0 1px #2C9AB7; }
+
+  .preview {
+    height: 180px;
+    position: relative;
+    overflow: hidden;
+    background: #0a0a15;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    line-height: 1.2;
+  }
+  .preview canvas { position: absolute; top:0; left:0; width:100%; height:100%; }
+
+  .card-body { padding: 14px 16px; }
+  .card-body h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; color: #e8eaf0; }
+  .card-body p { font-size: 13px; color: #8892a4; line-height: 1.5; }
+  .tag { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 99px; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<h2>What should the ASCII art background depict?</h2>
+<p class="subtitle">All options animate gently — this is the content/theme question, not the style.</p>
+
+<div class="grid">
+
+  <!-- A: Topographic terrain -->
+  <div class="card" id="card-topo" onclick="selectCard('topo')">
+    <div class="preview">
+      <canvas id="canvas-topo"></canvas>
+    </div>
+    <div class="card-body">
+      <h3>A — Topographic Terrain</h3>
+      <p>ASCII contour lines that slowly drift and shift — like a topo map coming alive. Ties your hiking/outdoors identity directly into the visual language of the site.</p>
+      <span class="tag" style="background:rgba(76,175,130,0.15);color:#4caf82;border:1px solid rgba(76,175,130,0.3)">🏔 Outdoors identity</span>
+    </div>
+  </div>
+
+  <!-- B: Neural net / brain waves -->
+  <div class="card" id="card-neural" onclick="selectCard('neural')">
+    <div class="preview">
+      <canvas id="canvas-neural"></canvas>
+    </div>
+    <div class="card-body">
+      <h3>B — Neural Network</h3>
+      <p>Nodes and weighted edges drawn in ASCII, slowly pulsing. Echoes both neuroscience and AI — the core of your research identity.</p>
+      <span class="tag" style="background:rgba(44,154,183,0.15);color:#2C9AB7;border:1px solid rgba(44,154,183,0.3)">🧠 Research identity</span>
+    </div>
+  </div>
+
+  <!-- C: Data rain / matrix but personal -->
+  <div class="card" id="card-rain" onclick="selectCard('rain')">
+    <div class="preview">
+      <canvas id="canvas-rain"></canvas>
+    </div>
+    <div class="card-body">
+      <h3>C — Symbol Rain</h3>
+      <p>Columns of falling characters — but instead of generic katakana, uses symbols from your worlds: ∇ ψ ∑ Ω μ ∂ ↑ ⊕ mixed with terrain chars <code>▲ ~ · —</code>.</p>
+      <span class="tag" style="background:rgba(246,166,35,0.15);color:#f6a623;border:1px solid rgba(246,166,35,0.3)">⚡ High energy</span>
+    </div>
+  </div>
+
+  <!-- D: Dual — topo + neural hybrid -->
+  <div class="card" id="card-hybrid" onclick="selectCard('hybrid')">
+    <div class="preview">
+      <canvas id="canvas-hybrid"></canvas>
+    </div>
+    <div class="card-body">
+      <h3>D — Hybrid: Terrain + Network</h3>
+      <p>Background has topographic contour texture; foreground has sparse neural-net nodes that connect across it. Two identities layered into one visual.</p>
+      <span class="tag" style="background:rgba(150,100,200,0.15);color:#b088d8;border:1px solid rgba(150,100,200,0.3)">✦ Both identities</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function selectCard(id) {
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('card-' + id).classList.add('selected');
+  if (window.__companion) window.__companion.select(id);
+}
+
+// ── A: Topo ──────────────────────────────────────────────
+(function() {
+  const canvas = document.getElementById('canvas-topo');
+  const ctx = canvas.getContext('2d');
+  const chars = [' ', ' ', ' ', '.', '·', '-', '~', '=', '≈', '≋', '∿', '∾'];
+  let t = 0;
+  function resize() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
+  resize();
+  function draw() {
+    canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
+    const W = canvas.width, H = canvas.height;
+    const cw = 9, ch = 13;
+    const cols = Math.ceil(W / cw), rows = Math.ceil(H / ch);
+    ctx.clearRect(0,0,W,H);
+    ctx.font = `${ch-1}px 'Courier New'`;
+    t += 0.008;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const nx = c/cols, ny = r/rows;
+        const v =
+          Math.sin(nx*6 + ny*4 + t) * 0.4 +
+          Math.sin(nx*3 - ny*7 + t*0.7) * 0.3 +
+          Math.cos(nx*9 + ny*2 - t*1.2) * 0.3;
+        const n = (v + 1) / 2;
+        const idx = Math.floor(n * (chars.length - 1));
+        const ch2 = chars[Math.max(0, Math.min(chars.length-1, idx))];
+        const alpha = 0.08 + n * 0.22;
+        ctx.fillStyle = `rgba(76,175,130,${alpha})`;
+        ctx.fillText(ch2, c*cw, r*ch + ch);
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── B: Neural ────────────────────────────────────────────
+(function() {
+  const canvas = document.getElementById('canvas-neural');
+  const ctx = canvas.getContext('2d');
+  let t = 0, nodes = [];
+  function resize() {
+    canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
+    nodes = Array.from({length: 18}, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random()-0.5)*0.3,
+      vy: (Math.random()-0.5)*0.3,
+      phase: Math.random()*Math.PI*2
+    }));
+  }
+  resize();
+  function draw() {
+    canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0,0,W,H);
+    t += 0.012;
+    nodes.forEach(n => {
+      n.x += n.vx; n.y += n.vy;
+      if (n.x < 0 || n.x > W) n.vx *= -1;
+      if (n.y < 0 || n.y > H) n.vy *= -1;
+    });
+    // edges
+    const edgeChars = ['-','–','—','·','~'];
+    ctx.font = "10px 'Courier New'";
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i+1; j < nodes.length; j++) {
+        const dx = nodes[j].x - nodes[i].x, dy = nodes[j].y - nodes[i].y;
+        const dist = Math.sqrt(dx*dx+dy*dy);
+        if (dist < 80) {
+          const alpha = (1 - dist/80) * 0.35;
+          ctx.fillStyle = `rgba(44,154,183,${alpha})`;
+          const steps = Math.floor(dist/8);
+          for (let s = 1; s < steps; s++) {
+            const px = nodes[i].x + dx*(s/steps);
+            const py = nodes[i].y + dy*(s/steps);
+            ctx.fillText('·', px, py);
+          }
+        }
+      }
+    }
+    // nodes
+    const nodeChars = ['○','◉','●','◎','⊕','⊗'];
+    nodes.forEach((n,i) => {
+      const pulse = Math.sin(t + n.phase) * 0.5 + 0.5;
+      ctx.fillStyle = `rgba(44,154,183,${0.3 + pulse*0.4})`;
+      ctx.font = `${10 + pulse*3}px 'Courier New'`;
+      ctx.fillText(nodeChars[i % nodeChars.length], n.x-5, n.y+5);
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── C: Symbol Rain ───────────────────────────────────────
+(function() {
+  const canvas = document.getElementById('canvas-rain');
+  const ctx = canvas.getContext('2d');
+  const symbols = '∇ψ∑Ωμ∂↑⊕αβγδεζθλρσφχψ▲~·—≈∿'.split('');
+  let cols = [], t = 0;
+  function initCols() {
+    const W = canvas.width;
+    const ncols = Math.floor(W / 12);
+    cols = Array.from({length: ncols}, () => ({
+      y: Math.random() * -100,
+      speed: 0.4 + Math.random() * 0.8,
+      len: 4 + Math.floor(Math.random()*6),
+      chars: Array.from({length:8}, () => symbols[Math.floor(Math.random()*symbols.length)])
+    }));
+  }
+  function resize() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; initCols(); }
+  resize();
+  function draw() {
+    if (canvas.width !== canvas.offsetWidth || canvas.height !== canvas.offsetHeight) resize();
+    const W = canvas.width, H = canvas.height;
+    ctx.fillStyle = 'rgba(10,10,21,0.15)';
+    ctx.fillRect(0,0,W,H);
+    ctx.font = "12px 'Courier New'";
+    t += 1;
+    cols.forEach((col, i) => {
+      col.y += col.speed;
+      if (col.y > H/12 + col.len + 5) {
+        col.y = -col.len - Math.random()*20;
+        col.chars = Array.from({length:8}, () => symbols[Math.floor(Math.random()*symbols.length)]);
+      }
+      for (let k = 0; k < col.len; k++) {
+        const row = Math.floor(col.y) - k;
+        if (row < 0 || row > H/12) continue;
+        const alpha = k === 0 ? 0.9 : (col.len-k)/col.len * 0.35;
+        const color = k === 0 ? `rgba(200,230,255,${alpha})` : `rgba(44,154,183,${alpha})`;
+        ctx.fillStyle = color;
+        const ch = col.chars[k % col.chars.length];
+        ctx.fillText(ch, i*12 + 2, row*13 + 13);
+      }
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── D: Hybrid ────────────────────────────────────────────
+(function() {
+  const canvas = document.getElementById('canvas-hybrid');
+  const ctx = canvas.getContext('2d');
+  const topoChars = [' ',' ','.','·','-','~','=','≈'];
+  let nodes = [], t = 0;
+  function resize() {
+    canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
+    nodes = Array.from({length: 10}, () => ({
+      x: Math.random()*canvas.width, y: Math.random()*canvas.height,
+      vx: (Math.random()-0.5)*0.4, vy: (Math.random()-0.5)*0.4,
+      phase: Math.random()*Math.PI*2
+    }));
+  }
+  resize();
+  function draw() {
+    if (canvas.width !== canvas.offsetWidth || canvas.height !== canvas.offsetHeight) resize();
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0,0,W,H);
+    t += 0.009;
+    // topo layer
+    const cw=10, ch=13;
+    ctx.font = `${ch-1}px 'Courier New'`;
+    for (let r=0; r < H/ch+1; r++) {
+      for (let c=0; c < W/cw+1; c++) {
+        const v = Math.sin(c/W*5 + r/H*4 + t)*0.5 + Math.cos(c/W*8 - r/H*3 + t*0.6)*0.5;
+        const n = (v+1)/2;
+        const idx = Math.floor(n*(topoChars.length-1));
+        ctx.fillStyle = `rgba(76,175,130,${0.05 + n*0.12})`;
+        ctx.fillText(topoChars[idx], c*cw, r*ch+ch);
+      }
+    }
+    // neural layer
+    nodes.forEach(n => {
+      n.x+=n.vx; n.y+=n.vy;
+      if(n.x<0||n.x>W) n.vx*=-1;
+      if(n.y<0||n.y>H) n.vy*=-1;
+    });
+    for(let i=0;i<nodes.length;i++) for(let j=i+1;j<nodes.length;j++) {
+      const dx=nodes[j].x-nodes[i].x, dy=nodes[j].y-nodes[i].y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<90) {
+        ctx.strokeStyle=`rgba(44,154,183,${(1-d/90)*0.4})`;
+        ctx.lineWidth=0.8; ctx.setLineDash([2,4]);
+        ctx.beginPath(); ctx.moveTo(nodes[i].x,nodes[i].y); ctx.lineTo(nodes[j].x,nodes[j].y); ctx.stroke();
+      }
+    }
+    ctx.setLineDash([]);
+    nodes.forEach((n,i)=>{
+      const pulse=Math.sin(t+n.phase)*0.5+0.5;
+      ctx.fillStyle=`rgba(44,154,183,${0.4+pulse*0.5})`;
+      ctx.font=`${11+pulse*3}px 'Courier New'`;
+      ctx.fillText(['○','◉','⊕','●','◎'][i%5], n.x-5, n.y+5);
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+
+</body>
+</html>

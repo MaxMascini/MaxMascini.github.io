@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Halifax Topo v2</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #07070e; color: #e8eaf0; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 24px; gap: 12px; }
+  #status { font-size: 12px; color: #4caf82; font-family: monospace; letter-spacing: 1px; }
+  #container { position: relative; width: min(960px, 100%); aspect-ratio: 16/9; border: 1px solid #1e2a3a; border-radius: 12px; overflow: hidden; cursor: crosshair; }
+  canvas { position: absolute; top:0; left:0; width:100%; height:100%; display:block; }
+  #label { position:absolute; bottom:10px; left:14px; font-size:10px; color:rgba(76,175,130,0.45); font-family:monospace; letter-spacing:2px; text-transform:uppercase; pointer-events:none; }
+  #coords { position:absolute; top:10px; right:12px; font-size:10px; color:rgba(136,146,164,0.4); font-family:monospace; pointer-events:none; }
+
+  /* Hero text overlay — shows what it'll look like on the real site */
+  #hero-overlay {
+    position:absolute; inset:0; display:flex; flex-direction:column;
+    justify-content:center; align-items:flex-start; padding: 5% 7%;
+    pointer-events:none;
+  }
+  .hero-eyebrow { font-size:11px; letter-spacing:4px; color:rgba(136,146,164,0.7); text-transform:uppercase; margin-bottom:14px; font-family:'Segoe UI',sans-serif; }
+  .hero-name { font-size:clamp(32px,5vw,58px); font-weight:300; color:#e8eaf0; letter-spacing:-1.5px; line-height:1.05; font-family:'Georgia',serif; margin-bottom:10px; }
+  .hero-sub { font-size:clamp(13px,1.5vw,17px); color:#2C9AB7; letter-spacing:1px; font-family:'Segoe UI',sans-serif; }
+
+  .note { font-size:11px; color:#4a5568; font-family:monospace; text-align:center; }
+</style>
+</head>
+<body>
+
+<div id="status">▶ fetching Halifax elevation data…</div>
+
+<div id="container">
+  <canvas id="c"></canvas>
+
+  <!-- Hero preview overlay (Outfit not loaded here, using Georgia as proxy) -->
+  <div id="hero-overlay">
+    <div class="hero-eyebrow">maxmascini.github.io</div>
+    <div class="hero-name">Max Mascini</div>
+    <div class="hero-sub">CS Researcher &nbsp;/&nbsp; Neuroscience &nbsp;/&nbsp; Backpacker</div>
+  </div>
+
+  <div id="label">Halifax, Nova Scotia</div>
+  <div id="coords"></div>
+</div>
+
+<div class="note">(hover anywhere on the map to raise a peak — hero text is approximate, Outfit font not loaded in preview)</div>
+
+<script>
+// ── Wider bounds to show the full peninsula shape ─────────
+// South tip → Narrows, NW Arm visible, Dartmouth across harbour
+const BOUNDS = {
+  latMin: 44.520,  latMax: 44.800,   // wider N–S: full peninsula + Bedford Basin
+  lonMin: -63.820, lonMax: -63.390,  // wider E–W: NW Arm + Dartmouth hillside
+};
+const GRID_W = 40, GRID_H = 26;  // ~1040 pts, 11 batches of 100
+
+let elevGrid = null;
+let mx = -999, my = -999, tmx = -999, tmy = -999;
+let t = 0;
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const container = document.getElementById('container');
+const statusEl = document.getElementById('status');
+const coordsEl = document.getElementById('coords');
+
+async function fetchElevation() {
+  const lats = [], lons = [];
+  for (let r = 0; r < GRID_H; r++)
+    for (let c = 0; c < GRID_W; c++) {
+      lats.push(BOUNDS.latMin + (r/(GRID_H-1))*(BOUNDS.latMax-BOUNDS.latMin));
+      lons.push(BOUNDS.lonMin + (c/(GRID_W-1))*(BOUNDS.lonMax-BOUNDS.lonMin));
+    }
+
+  const total = lats.length, BATCH = 100, allElev = [];
+  let loaded = 0;
+  for (let i = 0; i < total; i += BATCH) {
+    const url = `https://api.open-meteo.com/v1/elevation?latitude=${lats.slice(i,i+BATCH).join(',')}&longitude=${lons.slice(i,i+BATCH).join(',')}`;
+    const json = await (await fetch(url)).json();
+    allElev.push(...json.elevation);
+    loaded += Math.min(BATCH, total - i);
+    statusEl.textContent = `▶ loading… ${loaded}/${total} points`;
+  }
+
+  // Build grid, ocean/harbour = 0 (they'll appear as flat areas = wide contour spacing)
+  elevGrid = [];
+  for (let r = 0; r < GRID_H; r++) {
+    elevGrid[r] = [];
+    for (let c = 0; c < GRID_W; c++)
+      elevGrid[r][c] = Math.max(0, allElev[r*GRID_W+c]);
+  }
+
+  // Normalise
+  let minE = Infinity, maxE = -Infinity;
+  elevGrid.flat().forEach(v => { if(v<minE)minE=v; if(v>maxE)maxE=v; });
+  for (let r=0;r<GRID_H;r++)
+    for (let c=0;c<GRID_W;c++)
+      elevGrid[r][c] = ((elevGrid[r][c]-minE)/(maxE-minE))*2-1;
+
+  statusEl.textContent = `✓ Halifax loaded — ${minE.toFixed(0)}m – ${maxE.toFixed(0)}m  (hover to raise a peak)`;
+}
+
+function sampleElev(fc, fr) {
+  const drift = 0.014;
+  const wx = fc + (Math.sin(fc*0.8+fr*1.1+t*0.4)+Math.cos(fc*1.6-fr*0.7+t*0.25)*0.5)*drift;
+  const wy = fr + (Math.cos(fc*0.7+fr*1.2-t*0.35)+Math.sin(fc*1.4+fr*0.9+t*0.18)*0.5)*drift;
+  const c0 = Math.max(0,Math.min(GRID_W-2,Math.floor(wx)));
+  const r0 = Math.max(0,Math.min(GRID_H-2,Math.floor(wy)));
+  const tx = wx-c0, ty = wy-r0;
+  return elevGrid[r0][c0]*(1-tx)*(1-ty) + elevGrid[r0][c0+1]*tx*(1-ty)
+       + elevGrid[r0+1][c0]*(1-tx)*ty   + elevGrid[r0+1][c0+1]*tx*ty;
+}
+
+function marchingSquares(ctx, grid, cols, rows, cw, ch, level) {
+  function lerp(a,b,v){return(v-a)/(b-a);}
+  ctx.beginPath();
+  for(let r=0;r<rows-1;r++) for(let c=0;c<cols-1;c++){
+    const tl=grid[r][c],tr=grid[r][c+1],bl=grid[r+1][c],br=grid[r+1][c+1];
+    const x0=c*cw,y0=r*ch,x1=x0+cw,y1=y0+ch;
+    const idx=(tl>level?8:0)|(tr>level?4:0)|(br>level?2:0)|(bl>level?1:0);
+    if(idx===0||idx===15)continue;
+    const top=lerp(tl,tr,level),right=lerp(tr,br,level);
+    const bottom=lerp(bl,br,level),left=lerp(tl,bl,level);
+    const p={T:[x0+top*cw,y0],R:[x1,y0+right*ch],B:[x0+bottom*cw,y1],L:[x0,y0+left*ch]};
+    const s={1:[['L','B']],2:[['B','R']],3:[['L','R']],4:[['T','R']],
+      5:[['T','L'],['B','R']],6:[['T','B']],7:[['T','L']],8:[['T','L']],
+      9:[['T','B']],10:[['T','R'],['L','B']],11:[['T','R']],12:[['L','R']],
+      13:[['B','R']],14:[['L','B']]};
+    (s[idx]||[]).forEach(([a,b])=>{ctx.moveTo(p[a][0],p[a][1]);ctx.lineTo(p[b][0],p[b][1]);});
+  }
+  ctx.stroke();
+}
+
+const RC = 90, RR = 56;
+
+function draw() {
+  const W = container.offsetWidth, H = container.offsetHeight;
+  canvas.width = W; canvas.height = H;
+  if (!elevGrid) { requestAnimationFrame(draw); return; }
+
+  mx += ((tmx<0?-999:tmx)-mx)*0.10;
+  my += ((tmy<0?-999:tmy)-my)*0.10;
+
+  ctx.clearRect(0,0,W,H);
+
+  const cw = W/(RC-1), ch = H/(RR-1);
+  const grid = [];
+  for(let r=0;r<RR;r++){
+    grid[r]=[];
+    for(let c=0;c<RC;c++){
+      const fc=c/(RC-1)*(GRID_W-1), fr=r/(RR-1)*(GRID_H-1);
+      let v=sampleElev(fc,fr);
+      if(mx>=0){
+        const px=c*cw, py=r*ch;
+        const dist=Math.sqrt((px-mx)**2+(py-my)**2);
+        const inf=Math.max(0,1-dist/(W*0.16));
+        v+=inf*inf*1.8;
+      }
+      grid[r][c]=v;
+    }
+  }
+
+  const N = 18;
+  for(let i=0;i<=N;i++){
+    const level=-1+(i/N)*2;
+    const isIdx=(i%4===0);
+    ctx.strokeStyle=`rgba(76,175,130,${isIdx?0.52:0.20})`;
+    ctx.lineWidth=isIdx?1.0:0.55;
+    ctx.lineJoin='round'; ctx.lineCap='round';
+    marchingSquares(ctx,grid,RC,RR,cw,ch,level);
+  }
+
+  t+=0.004;
+  requestAnimationFrame(draw);
+}
+
+container.addEventListener('mousemove', e=>{
+  const r=container.getBoundingClientRect();
+  tmx=e.clientX-r.left; tmy=e.clientY-r.top;
+  const lat=BOUNDS.latMax-(tmy/container.offsetHeight)*(BOUNDS.latMax-BOUNDS.latMin);
+  const lon=BOUNDS.lonMin+(tmx/container.offsetWidth)*(BOUNDS.lonMax-BOUNDS.lonMin);
+  coordsEl.textContent=`${lat.toFixed(4)}°N  ${Math.abs(lon).toFixed(4)}°W`;
+});
+container.addEventListener('mouseleave',()=>{tmx=-999;tmy=-999;coordsEl.textContent='';});
+
+fetchElevation().then(draw).catch(err=>{
+  statusEl.textContent='✗ fetch error — using fallback';
+  elevGrid=[];
+  for(let r=0;r<GRID_H;r++){elevGrid[r]=[];for(let c=0;c<GRID_W;c++){const x=c/(GRID_W-1)*6,y=r/(GRID_H-1)*4;elevGrid[r][c]=Math.sin(x*1.1+y*0.9)*0.4+Math.cos(x*2.3-y*1.7)*0.3+Math.sin(x*0.5+y*2.1)*0.2+Math.cos(x*3.7+y*0.8)*0.1;}}
+  draw();
+});
+</script>
+</body>
+</html>

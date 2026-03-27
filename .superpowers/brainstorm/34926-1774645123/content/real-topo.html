@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real Topo Lines</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f0f1a; color: #e8eaf0; font-family: 'Segoe UI', sans-serif; padding: 24px; }
+  h2 { font-size: 20px; font-weight: 600; margin-bottom: 6px; }
+  .subtitle { color: #8892a4; font-size: 14px; margin-bottom: 24px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .card {
+    border: 2px solid #1e2a3a; border-radius: 12px; overflow: hidden;
+    cursor: pointer; transition: border-color 0.2s; background: #16213e;
+  }
+  .card:hover { border-color: #4caf82; }
+  .card.selected { border-color: #4caf82; box-shadow: 0 0 0 1px #4caf82; }
+  .preview { height: 220px; position: relative; overflow: hidden; background: #07070e; cursor: crosshair; }
+  .preview canvas { position: absolute; top:0; left:0; width:100%; height:100%; display:block; }
+  .hint { position: absolute; bottom: 8px; right: 10px; font-size: 10px; color: rgba(136,146,164,0.5); font-family: monospace; pointer-events: none; z-index: 10; }
+  .card-body { padding: 14px 16px; }
+  .card-body h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .card-body p { font-size: 13px; color: #8892a4; line-height: 1.5; }
+  .rec { display:inline-block; font-size:10px; padding:2px 8px; border-radius:99px; background:rgba(76,175,130,0.15); color:#4caf82; border:1px solid rgba(76,175,130,0.3); margin-top:8px; }
+</style>
+</head>
+<body>
+
+<h2>Real contour lines — move your mouse in each preview</h2>
+<p class="subtitle">Smooth canvas-drawn isocontours, like an actual topographic map. Three reactivity styles.</p>
+
+<div class="grid">
+
+  <div class="card" id="card-still" onclick="selectCard('still')">
+    <div class="preview" id="preview-still">
+      <canvas id="canvas-still"></canvas>
+      <div class="hint">ambient drift</div>
+    </div>
+    <div class="card-body">
+      <h3>A — Ambient</h3>
+      <p>Lines drift slowly, no mouse interaction. Pure atmosphere — what visitors who don't move their mouse see.</p>
+    </div>
+  </div>
+
+  <div class="card" id="card-peak" onclick="selectCard('peak')">
+    <div class="preview" id="preview-peak">
+      <canvas id="canvas-peak"></canvas>
+      <div class="hint">hover here ↑</div>
+    </div>
+    <div class="card-body">
+      <h3>B — Hover raises a peak</h3>
+      <p>Contour lines bunch up tightly under your cursor as terrain rises — then slowly flatten when you leave. Feels geological.</p>
+      <span class="rec">✦ Recommended</span>
+    </div>
+  </div>
+
+  <div class="card" id="card-reveal" onclick="selectCard('reveal')">
+    <div class="preview" id="preview-reveal">
+      <canvas id="canvas-reveal"></canvas>
+      <div class="hint">hover here ↑</div>
+    </div>
+    <div class="card-body">
+      <h3>C — Reveal</h3>
+      <p>Lines are barely visible. Your cursor illuminates them — like holding a lamp over a relief map in the dark.</p>
+    </div>
+  </div>
+
+  <div class="card" id="card-ripple" onclick="selectCard('ripple')">
+    <div class="preview" id="preview-ripple">
+      <canvas id="canvas-ripple"></canvas>
+      <div class="hint">move fast ↑</div>
+    </div>
+    <div class="card-body">
+      <h3>D — Ripple</h3>
+      <p>Fast movement sends waves through the contour field — lines warp and recover, like dropping a stone in still water.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function selectCard(id) {
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('card-' + id).classList.add('selected');
+  if (window.__companion) window.__companion.select(id);
+}
+
+// Smooth noise field
+function sampleNoise(x, y, t) {
+  return (
+    Math.sin(x * 1.8 + y * 1.3 + t * 0.7)  * 0.40 +
+    Math.sin(x * 3.7 - y * 2.9 + t * 0.5)  * 0.28 +
+    Math.cos(x * 6.1 + y * 4.7 - t * 0.9)  * 0.18 +
+    Math.cos(x * 0.9 - y * 0.7 + t * 0.3)  * 0.14
+  );
+}
+
+// Marching squares: draw contour line at threshold `level` through grid
+function marchingSquares(ctx, grid, cols, rows, cellW, cellH, level) {
+  // linear interpolation along an edge
+  function lerp(a, b, v) { return (v - a) / (b - a); }
+
+  ctx.beginPath();
+  for (let r = 0; r < rows - 1; r++) {
+    for (let c = 0; c < cols - 1; c++) {
+      const tl = grid[r    ][c    ];
+      const tr = grid[r    ][c + 1];
+      const bl = grid[r + 1][c    ];
+      const br = grid[r + 1][c + 1];
+
+      const x0 = c * cellW, y0 = r * cellH;
+      const x1 = x0 + cellW, y1 = y0 + cellH;
+
+      // Classify corners (above/below threshold)
+      const idx =
+        (tl > level ? 8 : 0) |
+        (tr > level ? 4 : 0) |
+        (br > level ? 2 : 0) |
+        (bl > level ? 1 : 0);
+
+      if (idx === 0 || idx === 15) continue;
+
+      // Edge midpoints via linear interpolation
+      const top    = lerp(tl, tr, level);
+      const right  = lerp(tr, br, level);
+      const bottom = lerp(bl, br, level);
+      const left   = lerp(tl, bl, level);
+
+      const pts = {
+        T: [x0 + top    * cellW, y0           ],
+        R: [x1,                  y0 + right  * cellH],
+        B: [x0 + bottom * cellW, y1           ],
+        L: [x0,                  y0 + left   * cellH],
+      };
+
+      // Marching squares line segments (16 cases)
+      const segs = {
+        1:  [['L','B']], 2:  [['B','R']], 3:  [['L','R']],
+        4:  [['T','R']], 5:  [['T','L'],['B','R']], 6:  [['T','B']],
+        7:  [['T','L']], 8:  [['T','L']], 9:  [['T','B']],
+        10: [['T','R'],['L','B']], 11: [['T','R']], 12: [['L','R']],
+        13: [['B','R']], 14: [['L','B']], 15: []
+      };
+
+      const lines = segs[idx] || [];
+      lines.forEach(([a, b]) => {
+        ctx.moveTo(pts[a][0], pts[a][1]);
+        ctx.lineTo(pts[b][0], pts[b][1]);
+      });
+    }
+  }
+  ctx.stroke();
+}
+
+// Build the full scene
+function drawTopo(ctx, W, H, t, mx, my, mode, ripples) {
+  ctx.clearRect(0, 0, W, H);
+
+  const cellW = 10, cellH = 10;
+  const cols = Math.ceil(W / cellW) + 2;
+  const rows = Math.ceil(H / cellH) + 2;
+
+  // Build elevation grid
+  const grid = [];
+  for (let r = 0; r < rows; r++) {
+    grid[r] = [];
+    for (let c = 0; c < cols; c++) {
+      const wx = c / cols * 6;
+      const wy = r / rows * 5;
+      let v = sampleNoise(wx, wy, t);
+
+      // Mouse peak
+      if (mode === 'peak' && mx >= 0) {
+        const px = c * cellW, py = r * cellH;
+        const dist = Math.sqrt((px - mx) ** 2 + (py - my) ** 2);
+        const inf = Math.max(0, 1 - dist / 150);
+        v += inf * inf * 2.0;
+      }
+
+      // Ripple waves
+      if (ripples) {
+        ripples.forEach(rp => {
+          const px = c * cellW, py = r * cellH;
+          const d = Math.sqrt((px - rp.x) ** 2 + (py - rp.y) ** 2);
+          const ring = rp.age * 3;
+          const diff = Math.abs(d - ring);
+          if (diff < 30) {
+            const str = (1 - diff / 30) * Math.max(0, 1 - rp.age / 55);
+            v += Math.sin(d * 0.2 - rp.age * 0.5) * str * 1.2;
+          }
+        });
+      }
+
+      grid[r][c] = v;
+    }
+  }
+
+  // Draw contour levels
+  const levels = 10;
+  const minV = -1.0, maxV = 1.0;
+
+  for (let i = 0; i <= levels; i++) {
+    const level = minV + (i / levels) * (maxV - minV);
+    const isIndex = (i % 3 === 0); // every 3rd line is thicker
+
+    let alpha, lineWidth;
+
+    if (mode === 'reveal') {
+      // Very dim base, brightens near cursor
+      alpha = isIndex ? 0.08 : 0.04;
+      lineWidth = isIndex ? 0.8 : 0.5;
+      if (mx >= 0) {
+        // Will boost per-line in a second pass — handled by drawing twice
+      }
+    } else {
+      alpha = isIndex ? 0.50 : 0.22;
+      lineWidth = isIndex ? 1.0 : 0.6;
+      if (mode === 'peak' && mx >= 0) alpha += 0.08;
+    }
+
+    ctx.strokeStyle = `rgba(76,175,130,${alpha})`;
+    ctx.lineWidth = lineWidth;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    marchingSquares(ctx, grid, cols, rows, cellW, cellH, level);
+  }
+
+  // Reveal mode: overdraw near cursor with higher opacity
+  if (mode === 'reveal' && mx >= 0) {
+    for (let i = 0; i <= levels; i++) {
+      const level = minV + (i / levels) * (maxV - minV);
+      const isIndex = (i % 3 === 0);
+
+      // Clip to circle around cursor
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(mx, my, 110, 0, Math.PI * 2);
+      ctx.clip();
+
+      ctx.strokeStyle = `rgba(76,175,130,${isIndex ? 0.65 : 0.35})`;
+      ctx.lineWidth = isIndex ? 1.2 : 0.7;
+      marchingSquares(ctx, grid, cols, rows, cellW, cellH, level);
+
+      ctx.restore();
+    }
+
+    // Soft glow ring
+    const grad = ctx.createRadialGradient(mx, my, 0, mx, my, 110);
+    grad.addColorStop(0,   'rgba(76,175,130,0.04)');
+    grad.addColorStop(0.6, 'rgba(76,175,130,0.02)');
+    grad.addColorStop(1,   'rgba(76,175,130,0.00)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(mx, my, 110, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+// ── A: Ambient ───────────────────────────────────────────
+(function () {
+  const canvas = document.getElementById('canvas-still');
+  const preview = document.getElementById('preview-still');
+  const ctx = canvas.getContext('2d');
+  let t = 0;
+  function draw() {
+    canvas.width = preview.offsetWidth; canvas.height = preview.offsetHeight;
+    drawTopo(ctx, canvas.width, canvas.height, t, -999, -999, 'still', null);
+    t += 0.005; requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── B: Peak ──────────────────────────────────────────────
+(function () {
+  const canvas = document.getElementById('canvas-peak');
+  const preview = document.getElementById('preview-peak');
+  const ctx = canvas.getContext('2d');
+  let t = 0, mx = -999, my = -999, tx = -999, ty = -999;
+  preview.addEventListener('mousemove', e => {
+    const r = canvas.getBoundingClientRect();
+    tx = e.clientX - r.left; ty = e.clientY - r.top;
+  });
+  preview.addEventListener('mouseleave', () => { tx = -999; ty = -999; });
+  function draw() {
+    canvas.width = preview.offsetWidth; canvas.height = preview.offsetHeight;
+    mx += ((tx < 0 ? -999 : tx) - mx) * 0.1;
+    my += ((ty < 0 ? -999 : ty) - my) * 0.1;
+    drawTopo(ctx, canvas.width, canvas.height, t, mx < -100 ? -999 : mx, my < -100 ? -999 : my, 'peak', null);
+    t += 0.005; requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── C: Reveal ────────────────────────────────────────────
+(function () {
+  const canvas = document.getElementById('canvas-reveal');
+  const preview = document.getElementById('preview-reveal');
+  const ctx = canvas.getContext('2d');
+  let t = 0, mx = -999, my = -999;
+  preview.addEventListener('mousemove', e => {
+    const r = canvas.getBoundingClientRect();
+    mx = e.clientX - r.left; my = e.clientY - r.top;
+  });
+  preview.addEventListener('mouseleave', () => { mx = -999; my = -999; });
+  function draw() {
+    canvas.width = preview.offsetWidth; canvas.height = preview.offsetHeight;
+    drawTopo(ctx, canvas.width, canvas.height, t, mx, my, 'reveal', null);
+    t += 0.005; requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── D: Ripple ────────────────────────────────────────────
+(function () {
+  const canvas = document.getElementById('canvas-ripple');
+  const preview = document.getElementById('preview-ripple');
+  const ctx = canvas.getContext('2d');
+  let t = 0, lastX = -999, lastY = -999;
+  const ripples = [];
+  preview.addEventListener('mousemove', e => {
+    const r = canvas.getBoundingClientRect();
+    const x = e.clientX - r.left, y = e.clientY - r.top;
+    if (Math.abs(x - lastX) > 14 || Math.abs(y - lastY) > 14) {
+      ripples.push({ x, y, age: 0 });
+      lastX = x; lastY = y;
+      if (ripples.length > 5) ripples.shift();
+    }
+  });
+  function draw() {
+    canvas.width = preview.offsetWidth; canvas.height = preview.offsetHeight;
+    ripples.forEach(rp => rp.age += 0.8);
+    for (let i = ripples.length - 1; i >= 0; i--) if (ripples[i].age > 55) ripples.splice(i, 1);
+    drawTopo(ctx, canvas.width, canvas.height, t, -999, -999, 'ripple', ripples);
+    t += 0.005; requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>
