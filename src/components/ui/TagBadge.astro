@@ -1,0 +1,30 @@
+---
+interface Props {
+  label: string;
+  active?: boolean;
+  href?: string;
+}
+
+const { label, active = false, href } = Astro.props;
+
+const colorMap: Record<string, string> = {
+  outdoors: 'bg-sage/15 text-sage border-sage/30',
+  backpacking: 'bg-sage/15 text-sage border-sage/30',
+  guide: 'bg-sage/15 text-sage border-sage/30',
+  tutorial: 'bg-teal/15 text-teal-light border-teal/30',
+  quarto: 'bg-teal/15 text-teal-light border-teal/30',
+  website: 'bg-teal/15 text-teal-light border-teal/30',
+  research: 'bg-amber/15 text-amber border-amber/30',
+  'ai ethics': 'bg-amber/15 text-amber border-amber/30',
+};
+
+const key = label.toLowerCase();
+const colorClass = colorMap[key] ?? 'bg-surface2 text-text-muted border-surface2';
+const baseClass = `tag-pill border text-[10px] font-semibold tracking-[0.12em] ${colorClass} ${active ? 'ring-1 ring-offset-1 ring-offset-bg' : ''}`;
+---
+
+{href ? (
+  <a href={href} class={`${baseClass} hover:opacity-80 transition-opacity`}>{label}</a>
+) : (
+  <span class={baseClass}>{label}</span>
+)}

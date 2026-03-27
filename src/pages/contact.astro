@@ -1,0 +1,58 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import SocialLinks from '../components/ui/SocialLinks.astro';
+---
+
+<PageLayout
+  title="Contact"
+  description="Get in touch with Max Mascini — researcher, developer, and backpacker based in Halifax, NS."
+  heading="Get In Touch"
+  subheading="Always happy to chat research, projects, or trail recommendations."
+>
+
+  <div class="max-w-2xl">
+    <div class="reveal space-y-6">
+      <!-- Primary contact -->
+      <div class="bg-surface border border-surface2 rounded-2xl p-6 hover:border-teal/30 transition-colors">
+        <p class="section-label">Email</p>
+        <a
+          href="mailto:mascini.max@dal.ca"
+          class="font-display font-semibold text-xl text-teal hover:text-teal-light transition-colors"
+        >
+          mascini.max@dal.ca
+        </a>
+        <p class="text-text-muted text-sm mt-2 leading-relaxed">
+          Best way to reach me. I try to respond within a day or two.
+        </p>
+      </div>
+
+      <!-- Location -->
+      <div class="bg-surface border border-surface2 rounded-xl p-5">
+        <p class="section-label">Location</p>
+        <p class="text-text-primary font-medium">Halifax, Nova Scotia, Canada</p>
+        <p class="text-text-muted text-sm mt-1">Faculty of Computer Science · Dalhousie University</p>
+      </div>
+
+      <!-- Social -->
+      <div class="bg-surface border border-surface2 rounded-xl p-5">
+        <p class="section-label">Elsewhere</p>
+        <div class="mt-3">
+          <SocialLinks />
+        </div>
+        <div class="mt-4 space-y-2">
+          <a href="https://www.linkedin.com/in/maxmascini/" target="_blank" rel="noopener noreferrer"
+             class="flex items-center gap-3 text-sm text-text-muted hover:text-teal transition-colors group">
+            <span class="w-20 font-medium">LinkedIn</span>
+            <span class="text-text-faint group-hover:text-teal transition-colors">linkedin.com/in/maxmascini</span>
+          </a>
+          <a href="https://github.com/maxmascini" target="_blank" rel="noopener noreferrer"
+             class="flex items-center gap-3 text-sm text-text-muted hover:text-teal transition-colors group">
+            <span class="w-20 font-medium">GitHub</span>
+            <span class="text-text-faint group-hover:text-teal transition-colors">github.com/maxmascini</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</PageLayout>

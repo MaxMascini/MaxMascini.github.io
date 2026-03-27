@@ -1,0 +1,104 @@
+---
+const navLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
+  { href: '/research', label: 'Research' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/contact', label: 'Contact' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header id="site-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+  <nav class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+    <!-- Logo -->
+    <a href="/" class="font-display font-bold text-xl text-text-primary tracking-tight hover:text-teal transition-colors duration-200 group">
+      Min<span class="text-teal group-hover:text-teal-light transition-colors">Max</span>ed
+    </a>
+
+    <!-- Desktop nav -->
+    <ul class="hidden md:flex items-center gap-1">
+      {navLinks.map(({ href, label }) => {
+        const isActive = currentPath === href || (href !== '/' && currentPath.startsWith(href));
+        return (
+          <li>
+            <a
+              href={href}
+              class={`px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${
+                isActive
+                  ? 'text-teal bg-teal/10'
+                  : 'text-text-muted hover:text-text-primary hover:bg-surface'
+              }`}
+            >
+              {label}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+
+    <!-- Mobile hamburger -->
+    <button
+      id="mobile-menu-btn"
+      class="md:hidden text-text-muted hover:text-text-primary transition-colors p-1.5"
+      aria-label="Toggle menu"
+    >
+      <svg id="icon-open" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+      <svg id="icon-close" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </nav>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="hidden md:hidden border-t border-surface2 bg-bg/95 backdrop-blur-sm">
+    <ul class="max-w-5xl mx-auto px-6 py-4 flex flex-col gap-1">
+      {navLinks.map(({ href, label }) => {
+        const isActive = currentPath === href || (href !== '/' && currentPath.startsWith(href));
+        return (
+          <li>
+            <a
+              href={href}
+              class={`block px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                isActive
+                  ? 'text-teal bg-teal/10'
+                  : 'text-text-muted hover:text-text-primary hover:bg-surface'
+              }`}
+            >
+              {label}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+</header>
+
+<script>
+  const header = document.getElementById('site-header');
+  const mobileBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const iconOpen = document.getElementById('icon-open');
+  const iconClose = document.getElementById('icon-close');
+
+  // Scroll-activated backdrop
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 20) {
+      header?.classList.add('bg-bg/90', 'backdrop-blur-md', 'border-b', 'border-surface');
+    } else {
+      header?.classList.remove('bg-bg/90', 'backdrop-blur-md', 'border-b', 'border-surface');
+    }
+  });
+
+  // Mobile toggle
+  mobileBtn?.addEventListener('click', () => {
+    const isOpen = !mobileMenu?.classList.contains('hidden');
+    mobileMenu?.classList.toggle('hidden', isOpen);
+    iconOpen?.classList.toggle('hidden', !isOpen);
+    iconClose?.classList.toggle('hidden', isOpen);
+  });
+</script>

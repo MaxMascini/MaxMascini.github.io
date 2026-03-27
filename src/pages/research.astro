@@ -1,0 +1,88 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+---
+
+<PageLayout
+  title="Research"
+  description="Max Mascini's research in AI ethics and theory of mind at Dalhousie University's Faculty of Computer Science."
+  heading="Research"
+  subheading="AI ethics, theory of mind, and the philosophy of human-AI interaction."
+>
+
+  <!-- Current focus -->
+  <div class="mb-14 reveal">
+    <p class="section-label">Current Focus</p>
+    <div class="bg-surface border border-teal/20 rounded-2xl p-6 md:p-8">
+      <h2 class="font-display font-bold text-xl text-text-primary mb-3">
+        Theory of Mind in Human-AI Interactions
+      </h2>
+      <p class="text-text-muted leading-relaxed max-w-2xl mb-4">
+        My thesis work investigates how people attribute mental states — beliefs, desires, intentions — to AI systems, and how this attribution shapes trust, interaction patterns, and the ethics of AI design. I draw on both cognitive science frameworks (theory of mind, intentional stance) and HCI methods to study this empirically.
+      </p>
+      <div class="flex flex-wrap gap-2">
+        {['AI Ethics', 'Theory of Mind', 'HCI', 'Human-AI Interaction', 'Cognitive Science'].map((tag) => (
+          <span class="tag-pill bg-amber/10 text-amber border border-amber/20">{tag}</span>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <!-- Research Interests -->
+  <div class="mb-14">
+    <p class="section-label">Interests</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {[
+        {
+          title: 'AI Ethics & Alignment',
+          desc: 'How do we design AI systems that behave in accordance with human values? What does ethical AI look like in practice, not just in principle?',
+        },
+        {
+          title: 'Theory of Mind',
+          desc: "The cognitive ability to attribute mental states to others. I study how this plays out when one of those 'others' is an AI.",
+        },
+        {
+          title: 'Trust in AI Systems',
+          desc: 'When do people trust AI? When should they? How do anthropomorphism and mental model accuracy interact with appropriate reliance?',
+        },
+        {
+          title: 'Neurotechnology',
+          desc: 'Brain-computer interfaces, neural data, and the ethics of reading and writing directly to biological neural tissue.',
+        },
+      ].map(({ title, desc }) => (
+        <div class="reveal bg-surface border border-surface2 rounded-xl p-5 hover:border-teal/20 transition-colors">
+          <h3 class="font-display font-semibold text-text-primary mb-2">{title}</h3>
+          <p class="text-text-muted text-sm leading-relaxed">{desc}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- Affiliation -->
+  <div class="mb-14 reveal">
+    <p class="section-label">Affiliation</p>
+    <div class="flex items-start gap-4 p-5 bg-surface border border-surface2 rounded-xl">
+      <div class="w-10 h-10 rounded-lg bg-teal/10 border border-teal/20 flex items-center justify-center text-teal shrink-0">
+        🎓
+      </div>
+      <div>
+        <p class="font-display font-semibold text-text-primary">Dalhousie University</p>
+        <p class="text-text-muted text-sm">Faculty of Computer Science · Halifax, Nova Scotia</p>
+        <p class="text-text-muted text-sm mt-1">Masters of Computer Science (MCS) · 2024–present</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Publications -->
+  <div class="reveal">
+    <p class="section-label">Publications</p>
+    <div class="border border-dashed border-surface2 rounded-xl p-8 text-center">
+      <p class="text-text-muted text-sm">
+        Publications and conference papers coming as the thesis progresses.
+      </p>
+      <p class="text-text-muted text-xs mt-2">
+        In the meantime, see my <a href="/files/Academic_CV_Jan_2026.pdf" target="_blank" class="text-teal hover:text-teal-light transition-colors">CV</a> for my academic background.
+      </p>
+    </div>
+  </div>
+
+</PageLayout>

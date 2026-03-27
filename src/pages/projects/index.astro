@@ -1,0 +1,77 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '../../layouts/PageLayout.astro';
+import ProjectCard from '../../components/ui/ProjectCard.astro';
+
+const allProjects = await getCollection('projects');
+const projects = allProjects.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const allTags = ['All', ...new Set(projects.flatMap((p) => p.data.tags))];
+---
+
+<PageLayout
+  title="Projects"
+  description="Things Max Mascini has built — web projects, research tools, and experiments."
+  heading="Projects"
+  subheading="Things I've built, explored, and shipped."
+>
+  <!-- Tag filter -->
+  <div class="flex flex-wrap gap-2 mb-8" id="tag-filters">
+    {allTags.map((tag) => (
+      <button
+        class="tag-filter px-3 py-1.5 rounded-full border text-xs font-semibold uppercase tracking-wide transition-all duration-200"
+        class:list={[
+          tag === 'All'
+            ? 'border-teal/40 bg-teal/15 text-teal'
+            : 'border-surface2 bg-surface text-text-muted hover:border-teal/30 hover:text-teal',
+        ]}
+        data-filter={tag}
+      >
+        {tag}
+      </button>
+    ))}
+  </div>
+
+  <!-- Projects grid -->
+  <div id="projects-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    {projects.map((project) => (
+      <div class="reveal project-item" data-tags={project.data.tags.join(',')}>
+        <ProjectCard project={project} />
+      </div>
+    ))}
+  </div>
+
+  <p id="no-projects" class="hidden text-center text-text-muted py-16">No projects with this tag yet.</p>
+</PageLayout>
+
+<script>
+  const filters = document.querySelectorAll<HTMLButtonElement>('.tag-filter');
+  const items = document.querySelectorAll<HTMLElement>('.project-item');
+  const noMsg = document.getElementById('no-projects');
+
+  filters.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.filter ?? 'All';
+
+      filters.forEach((b) => {
+        const isActive = b.dataset.filter === filter;
+        b.classList.toggle('border-teal/40', isActive);
+        b.classList.toggle('bg-teal/15', isActive);
+        b.classList.toggle('text-teal', isActive);
+        b.classList.toggle('border-surface2', !isActive);
+        b.classList.toggle('bg-surface', !isActive);
+        b.classList.toggle('text-text-muted', !isActive);
+      });
+
+      let visible = 0;
+      items.forEach((item) => {
+        const tags = (item.dataset.tags ?? '').split(',');
+        const show = filter === 'All' || tags.includes(filter);
+        item.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+
+      noMsg?.classList.toggle('hidden', visible > 0);
+    });
+  });
+</script>

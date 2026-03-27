@@ -1,0 +1,79 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '../../layouts/PageLayout.astro';
+import BlogCard from '../../components/ui/BlogCard.astro';
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const posts = allPosts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const allCategories = ['All', ...new Set(posts.flatMap((p) => p.data.categories))];
+---
+
+<PageLayout
+  title="Blog"
+  description="Writing about AI research, neuroscience, outdoor adventures, and the occasional tutorial."
+  heading="Blog"
+  subheading="Research notes, trail stories, and tutorials."
+>
+  <!-- Tag filter -->
+  <div class="flex flex-wrap gap-2 mb-8" id="tag-filters">
+    {allCategories.map((cat) => (
+      <button
+        class="tag-filter px-3 py-1.5 rounded-full border text-xs font-semibold uppercase tracking-wide transition-all duration-200"
+        class:list={[
+          cat === 'All'
+            ? 'border-teal/40 bg-teal/15 text-teal active'
+            : 'border-surface2 bg-surface text-text-muted hover:border-teal/30 hover:text-teal',
+        ]}
+        data-filter={cat}
+      >
+        {cat}
+      </button>
+    ))}
+  </div>
+
+  <!-- Posts grid -->
+  <div id="posts-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+    {posts.map((post) => (
+      <div class="reveal post-item" data-categories={post.data.categories.join(',')}>
+        <BlogCard post={post} />
+      </div>
+    ))}
+  </div>
+
+  <!-- Empty state -->
+  <p id="no-posts" class="hidden text-center text-text-muted py-16">No posts in this category yet.</p>
+</PageLayout>
+
+<script>
+  const filters = document.querySelectorAll<HTMLButtonElement>('.tag-filter');
+  const items = document.querySelectorAll<HTMLElement>('.post-item');
+  const noPostsMsg = document.getElementById('no-posts');
+
+  filters.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.filter ?? 'All';
+
+      // Update active state
+      filters.forEach((b) => {
+        const isActive = b.dataset.filter === filter;
+        b.classList.toggle('border-teal/40', isActive);
+        b.classList.toggle('bg-teal/15', isActive);
+        b.classList.toggle('text-teal', isActive);
+        b.classList.toggle('border-surface2', !isActive);
+        b.classList.toggle('bg-surface', !isActive);
+        b.classList.toggle('text-text-muted', !isActive);
+      });
+
+      let visible = 0;
+      items.forEach((item) => {
+        const cats = (item.dataset.categories ?? '').split(',');
+        const show = filter === 'All' || cats.includes(filter);
+        item.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+
+      noPostsMsg?.classList.toggle('hidden', visible > 0);
+    });
+  });
+</script>

@@ -1,0 +1,94 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import TagBadge from '../components/ui/TagBadge.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  readingTime: number;
+  prevPost?: CollectionEntry<'blog'> | null;
+  nextPost?: CollectionEntry<'blog'> | null;
+}
+
+const { post, readingTime, prevPost, nextPost } = Astro.props;
+const { title, description, date, author, categories, image, imageAlt } = post.data;
+
+const formattedDate = new Date(date).toLocaleDateString('en-CA', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<BaseLayout title={title} description={description} image={image} type="article">
+  <article class="pt-24 pb-16">
+    <!-- Hero area -->
+    <header class="max-w-3xl mx-auto px-6 mb-10">
+      <a href="/blog" class="inline-flex items-center gap-1.5 text-sm text-text-muted hover:text-teal transition-colors mb-6 group">
+        <span class="group-hover:-translate-x-1 transition-transform">←</span>
+        All posts
+      </a>
+
+      <div class="flex flex-wrap gap-2 mb-4">
+        {categories.map((cat) => <TagBadge label={cat} />)}
+      </div>
+
+      <h1 class="font-display font-bold text-3xl md:text-4xl text-text-primary leading-tight mb-4">
+        {title}
+      </h1>
+
+      <p class="text-text-muted text-lg leading-relaxed mb-6">{description}</p>
+
+      <div class="flex items-center gap-4 text-sm text-text-muted border-t border-surface pt-4">
+        <span>{author}</span>
+        <span class="text-text-faint">·</span>
+        <time datetime={date.toISOString()}>{formattedDate}</time>
+        <span class="text-text-faint">·</span>
+        <span>{readingTime} min read</span>
+      </div>
+    </header>
+
+    {image && (
+      <div class="max-w-3xl mx-auto px-6 mb-10">
+        <img src={image} alt={imageAlt ?? title} class="w-full rounded-xl object-cover max-h-80" />
+      </div>
+    )}
+
+    <!-- Body -->
+    <div class="max-w-3xl mx-auto px-6">
+      <div class="prose prose-invert prose-lg max-w-none
+        prose-headings:font-display prose-headings:font-semibold
+        prose-a:text-teal prose-a:no-underline hover:prose-a:underline
+        prose-code:text-teal-light prose-code:bg-surface prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm
+        prose-pre:bg-surface prose-pre:border prose-pre:border-surface2
+        prose-blockquote:border-l-teal prose-blockquote:text-text-muted
+        font-serif">
+        <slot />
+      </div>
+    </div>
+
+    <!-- Prev/Next navigation -->
+    {(prevPost || nextPost) && (
+      <div class="max-w-3xl mx-auto px-6 mt-16 pt-8 border-t border-surface">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {prevPost && (
+            <a href={`/blog/${prevPost.slug}`} class="group flex flex-col gap-1 p-4 rounded-lg border border-surface hover:border-teal/40 transition-all duration-200 hover:bg-surface/50">
+              <span class="text-xs text-text-muted uppercase tracking-wide">← Previous</span>
+              <span class="text-sm font-medium text-text-primary group-hover:text-teal transition-colors line-clamp-2">
+                {prevPost.data.title}
+              </span>
+            </a>
+          )}
+          {nextPost && (
+            <a href={`/blog/${nextPost.slug}`} class="group flex flex-col gap-1 p-4 rounded-lg border border-surface hover:border-teal/40 transition-all duration-200 hover:bg-surface/50 sm:text-right sm:ml-auto sm:items-end w-full">
+              <span class="text-xs text-text-muted uppercase tracking-wide">Next →</span>
+              <span class="text-sm font-medium text-text-primary group-hover:text-teal transition-colors line-clamp-2">
+                {nextPost.data.title}
+              </span>
+            </a>
+          )}
+        </div>
+      </div>
+    )}
+  </article>
+</BaseLayout>

@@ -1,0 +1,29 @@
+---
+import { getCollection } from 'astro:content';
+import BlogPostLayout from '../../layouts/BlogPostLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  const sorted = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+  return sorted.map((post, idx) => ({
+    params: { slug: post.slug },
+    props: {
+      post,
+      prevPost: sorted[idx + 1] ?? null,
+      nextPost: sorted[idx - 1] ?? null,
+    },
+  }));
+}
+
+const { post, prevPost, nextPost } = Astro.props;
+const { Content } = await post.render();
+
+// Estimate reading time (~200 wpm)
+const wordCount = post.body.split(/\s+/).length;
+const readingTime = Math.max(1, Math.round(wordCount / 200));
+---
+
+<BlogPostLayout post={post} readingTime={readingTime} prevPost={prevPost} nextPost={nextPost}>
+  <Content />
+</BlogPostLayout>

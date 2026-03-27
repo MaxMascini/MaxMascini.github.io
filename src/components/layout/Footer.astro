@@ -1,0 +1,79 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-surface mt-24">
+  <div class="max-w-5xl mx-auto px-6 py-10">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Brand -->
+      <div>
+        <a href="/" class="font-display font-bold text-lg text-text-primary hover:text-teal transition-colors">
+          Min<span class="text-teal">Max</span>ed
+        </a>
+        <p class="text-text-muted text-sm mt-2 leading-relaxed">
+          Research, writing, and adventures from Halifax, NS.
+        </p>
+      </div>
+
+      <!-- Nav -->
+      <div>
+        <p class="text-xs font-semibold text-teal uppercase tracking-widest mb-3">Navigate</p>
+        <ul class="flex flex-col gap-1.5">
+          {[
+            { href: '/about', label: 'About' },
+            { href: '/research', label: 'Research' },
+            { href: '/projects', label: 'Projects' },
+            { href: '/blog', label: 'Blog' },
+            { href: '/contact', label: 'Contact' },
+          ].map(({ href, label }) => (
+            <li>
+              <a href={href} class="text-sm text-text-muted hover:text-text-primary transition-colors">
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Social -->
+      <div>
+        <p class="text-xs font-semibold text-teal uppercase tracking-widest mb-3">Connect</p>
+        <ul class="flex flex-col gap-1.5">
+          <li>
+            <a href="https://www.linkedin.com/in/maxmascini/" target="_blank" rel="noopener noreferrer"
+               class="text-sm text-text-muted hover:text-text-primary transition-colors flex items-center gap-2">
+              <span class="w-4 text-center">in</span> LinkedIn
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/maxmascini" target="_blank" rel="noopener noreferrer"
+               class="text-sm text-text-muted hover:text-text-primary transition-colors flex items-center gap-2">
+              <span class="w-4 text-center">⌥</span> GitHub
+            </a>
+          </li>
+          <li>
+            <a href="mailto:mascini.max@dal.ca"
+               class="text-sm text-text-muted hover:text-text-primary transition-colors flex items-center gap-2">
+              <span class="w-4 text-center">@</span> Email
+            </a>
+          </li>
+          <li>
+            <a href="/files/Academic_CV_Jan_2026.pdf" target="_blank"
+               class="text-sm text-text-muted hover:text-text-primary transition-colors flex items-center gap-2">
+              <span class="w-4 text-center">↓</span> CV / Resume
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-8 pt-6 border-t border-surface flex flex-col sm:flex-row items-center justify-between gap-2">
+      <p class="text-text-muted text-xs">
+        &copy; {year} Max Mascini. All rights reserved.
+      </p>
+      <p class="text-text-muted text-xs">
+        Built with <a href="https://astro.build" class="text-teal hover:text-teal-light transition-colors">Astro</a>
+      </p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,131 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import TimelineItem from '../components/ui/TimelineItem.astro';
+import SocialLinks from '../components/ui/SocialLinks.astro';
+---
+
+<PageLayout
+  title="About"
+  description="About Max Mascini — neuroscience grad, CS researcher, backpacker, and NeuroTech specialist in Halifax, NS."
+  heading="About Me"
+  subheading="Neuroscientist turned computer scientist, based in Halifax, Nova Scotia."
+>
+
+  <!-- Two-col intro -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-16 reveal">
+    <!-- Photo col -->
+    <div class="flex flex-col items-center gap-4">
+      <div class="relative">
+        <div class="absolute -inset-1.5 rounded-2xl bg-gradient-to-br from-teal/30 to-sage/20 blur-md"></div>
+        <img
+          src="/images/max_kitty_pic.jpg"
+          alt="Max Mascini"
+          class="relative w-52 h-52 rounded-2xl object-cover border border-teal/20"
+        />
+      </div>
+      <SocialLinks />
+      <a
+        href="/files/Academic_CV_Jan_2026.pdf"
+        target="_blank"
+        class="w-full text-center px-4 py-2 rounded-lg border border-teal/30 text-teal text-sm font-medium hover:bg-teal/10 transition-all duration-200"
+      >
+        Download CV ↓
+      </a>
+    </div>
+
+    <!-- Bio col -->
+    <div class="md:col-span-2 space-y-4 text-text-primary leading-relaxed">
+      <p>
+        I'm a Masters of Computer Science student at <strong class="text-text-primary">Dalhousie University</strong> in Halifax, Nova Scotia. My research focuses on AI ethics and theory of mind in human-AI interactions — specifically, how humans attribute mental states to AI systems and how this shapes trust and interaction dynamics.
+      </p>
+      <p>
+        I did my undergraduate degree at Dalhousie, graduating with <strong class="text-text-primary">first-class honours in neuroscience</strong> and a certificate in neurotechnology & innovation. The jump from neuroscience to computer science might seem odd from the outside, but both disciplines ask the same fundamental question: how do minds work, and what does it mean to build one?
+      </p>
+      <p>
+        Outside of research, I work as the <strong class="text-text-primary">NeuroTech Programming Specialist</strong> at <a href="https://surgeinnovation.ca/" class="text-teal hover:text-teal-light transition-colors" target="_blank" rel="noopener noreferrer">SURGE Innovation</a>, where I develop programming resources and workshops at the intersection of neurotechnology and entrepreneurship.
+      </p>
+      <p>
+        In my spare time, I love to disappear into the backcountry. In the summer of 2024, my mother and I thru-hiked the <strong class="text-text-primary">East Coast Trail</strong> — 360km along the rugged coastline of Newfoundland's Avalon Peninsula. If you have trail recommendations, I genuinely want to hear them.
+      </p>
+      <p class="text-text-muted text-sm">
+        Reach me anytime at <a href="mailto:mascini.max@dal.ca" class="text-teal hover:text-teal-light transition-colors">mascini.max@dal.ca</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Interests cards -->
+  <div class="mb-16">
+    <p class="section-label">What I Care About</p>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      {[
+        {
+          icon: '🧠',
+          title: 'AI Research',
+          desc: 'Ethics, theory of mind, and the philosophy of intelligence — both artificial and biological.',
+        },
+        {
+          icon: '📊',
+          title: 'Data Visualization',
+          desc: 'Making complex data legible and beautiful. Statistics as a form of storytelling.',
+        },
+        {
+          icon: '🎒',
+          title: 'Backcountry Travel',
+          desc: 'Multi-day backpacking and canoe trips. Currently planning the next Newfoundland adventure.',
+        },
+      ].map(({ icon, title, desc }) => (
+        <div class="reveal bg-surface border border-surface2 rounded-xl p-5 hover:border-teal/30 transition-colors">
+          <span class="text-2xl mb-3 block">{icon}</span>
+          <h3 class="font-display font-semibold text-text-primary mb-2">{title}</h3>
+          <p class="text-text-muted text-sm leading-relaxed">{desc}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <div>
+    <p class="section-label">Timeline</p>
+    <h2 class="font-display font-bold text-2xl text-text-primary mb-8">How I Got Here</h2>
+
+    <div class="max-w-2xl">
+      <TimelineItem
+        year="2019"
+        title="Started Neuroscience at Dalhousie"
+        subtitle="Dalhousie University, Halifax NS"
+        description="Began undergraduate studies in neuroscience with a growing interest in neural computation and the science of learning."
+        tag="Education"
+      />
+      <TimelineItem
+        year="2024"
+        title="First-Class Honours in Neuroscience"
+        subtitle="+ Certificate in Neurotechnology & Innovation"
+        description="Graduated from Dalhousie with first-class honours. The neurotechnology certificate introduced me to the intersection of engineering and neuroscience — the gateway to computer science."
+        tag="Milestone"
+      />
+      <TimelineItem
+        year="2024"
+        title="Thru-Hiked the East Coast Trail"
+        subtitle="360km · 20 days · Avalon Peninsula, Newfoundland"
+        description="With my mother, completed a full thru-hike of the East Coast Trail north-to-south. One of the most challenging and beautiful things I've done."
+        tag="Adventure"
+      />
+      <TimelineItem
+        year="2024"
+        title="NeuroTech Programming Specialist"
+        subtitle="SURGE Innovation, Halifax NS"
+        description="Joined SURGE Innovation to develop programming and workshops bridging neurotechnology and entrepreneurship."
+        tag="Work"
+      />
+      <TimelineItem
+        year="2024"
+        title="Started MCS at Dalhousie"
+        subtitle="Masters of Computer Science"
+        description="Began graduate studies focused on AI ethics and theory of mind. Bridging my neuroscience background with computer science to study how humans understand AI."
+        tag="Education"
+        isLast={true}
+      />
+    </div>
+  </div>
+
+</PageLayout>

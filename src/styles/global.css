@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400..800&family=Lora:ital,wght@0,400..700;1,400..700&family=Fira+Code:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-bg: #1a1a2e;
+    --color-surface: #16213e;
+    --color-surface2: #0f3460;
+    --color-teal: #2C9AB7;
+    --color-teal-light: #4fc3f7;
+    --color-sage: #4caf82;
+    --color-amber: #f6a623;
+    --color-text: #e8eaf0;
+    --color-muted: #8892a4;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-bg text-text-primary font-sans antialiased;
+    min-height: 100vh;
+  }
+
+  ::selection {
+    background-color: var(--color-teal);
+    color: #fff;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-surface);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-teal-dark, #1a6a82);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-teal);
+  }
+}
+
+@layer components {
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.65s ease, transform 0.65s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .tag-pill {
+    @apply inline-block px-2.5 py-0.5 rounded-full text-xs font-medium tracking-wide uppercase;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 ease-out;
+  }
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(44, 154, 183, 0.15);
+  }
+
+  .teal-border-l {
+    @apply border-l-2 border-teal pl-4;
+  }
+
+  .section-label {
+    @apply text-teal text-xs font-semibold uppercase tracking-[0.2em] mb-2;
+  }
+}

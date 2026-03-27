@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="404 — Page Not Found">
+  <div class="min-h-screen flex items-center justify-center px-6">
+    <div class="text-center max-w-md">
+      <div class="mb-6">
+        <img src="/images/404.png" alt="404 cat" class="w-40 mx-auto opacity-80 rounded-xl" />
+      </div>
+      <h1 class="font-display font-bold text-6xl text-teal mb-2">404</h1>
+      <h2 class="font-display font-semibold text-xl text-text-primary mb-3">
+        You've gone off-trail
+      </h2>
+      <p class="text-text-muted text-sm leading-relaxed mb-8">
+        This page doesn't exist. Happens to the best of us — even on marked trails.
+      </p>
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-teal text-white font-semibold text-sm hover:bg-teal-light transition-all duration-200 hover:-translate-y-0.5"
+      >
+        ← Back to the trailhead
+      </a>
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,76 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/home/Hero.astro';
+import FeaturedProjects from '../components/home/FeaturedProjects.astro';
+import RecentPosts from '../components/home/RecentPosts.astro';
+import SocialLinks from '../components/ui/SocialLinks.astro';
+---
+
+<BaseLayout title="MinMaxed" description="Max Mascini — CS researcher, backpacker, and neuroscience grad exploring AI ethics and human-AI interaction at Dalhousie University.">
+
+  <Hero />
+
+  <!-- Quick Bio Strip -->
+  <section class="max-w-5xl mx-auto px-6 py-16 border-b border-surface">
+    <div class="flex flex-col md:flex-row items-center md:items-start gap-8 reveal">
+      <!-- Photo -->
+      <div class="shrink-0">
+        <div class="relative">
+          <div class="absolute -inset-1 rounded-full bg-gradient-to-br from-teal/40 to-sage/20 blur-sm"></div>
+          <img
+            src="/images/max_kitty_pic.jpg"
+            alt="Max Mascini"
+            class="relative w-32 h-32 rounded-full object-cover border-2 border-teal/30"
+          />
+        </div>
+      </div>
+
+      <!-- Bio -->
+      <div class="flex-1 text-center md:text-left">
+        <div class="flex flex-wrap gap-2 justify-center md:justify-start mb-3">
+          <span class="tag-pill bg-teal/15 text-teal border border-teal/20">MCS @ Dalhousie</span>
+          <span class="tag-pill bg-sage/15 text-sage border border-sage/20">Halifax, NS</span>
+          <span class="tag-pill bg-amber/15 text-amber border border-amber/20">AI Ethics Researcher</span>
+        </div>
+        <p class="text-text-primary text-base leading-relaxed max-w-2xl">
+          I'm a Masters of Computer Science student at Dalhousie University. My research sits at the intersection of AI ethics and theory of mind — specifically how humans build mental models of AI systems and vice versa. I did my undergrad in neuroscience at Dal, and spend my free time in the backcountry.
+        </p>
+        <div class="mt-4 flex justify-center md:justify-start">
+          <SocialLinks size="sm" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <FeaturedProjects />
+
+  <RecentPosts />
+
+  <!-- Research Teaser -->
+  <section class="max-w-5xl mx-auto px-6 py-16">
+    <div class="reveal relative overflow-hidden rounded-2xl border border-teal/20 bg-surface p-8 md:p-10">
+      <!-- Decorative bg -->
+      <div class="absolute top-0 right-0 w-64 h-64 opacity-5" aria-hidden="true">
+        <svg viewBox="0 0 200 200" fill="none">
+          <circle cx="100" cy="100" r="90" stroke="#2C9AB7" stroke-width="1"/>
+          <circle cx="100" cy="100" r="70" stroke="#2C9AB7" stroke-width="1"/>
+          <circle cx="100" cy="100" r="50" stroke="#2C9AB7" stroke-width="1"/>
+          <circle cx="100" cy="100" r="30" stroke="#2C9AB7" stroke-width="1"/>
+        </svg>
+      </div>
+
+      <p class="section-label">Currently Working On</p>
+      <h2 class="font-display font-bold text-xl md:text-2xl text-text-primary mb-3 max-w-xl">
+        Theory of Mind in Human-AI Interactions
+      </h2>
+      <p class="text-text-muted leading-relaxed max-w-2xl mb-6">
+        Investigating how humans attribute mental states to AI systems, and how this shapes trust, interaction patterns, and the ethics of AI design. Part of my MCS program at the Faculty of Computer Science, Dalhousie University.
+      </p>
+      <a href="/research" class="inline-flex items-center gap-2 text-teal font-semibold text-sm hover:text-teal-light transition-colors group">
+        Learn more about my research
+        <span class="group-hover:translate-x-1 transition-transform">→</span>
+      </a>
+    </div>
+  </section>
+
+</BaseLayout>
