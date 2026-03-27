@@ -1,4 +1,14 @@
-/.quarto/
+# Build output
+dist/
+.astro/
 
+# Dependencies
+node_modules/
+
+# Quarto (legacy)
+/.quarto/
 **/*.quarto_ipynb
+
+# Misc
 .worktrees/
+.DS_Store
