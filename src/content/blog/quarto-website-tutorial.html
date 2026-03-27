@@ -6,8 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Max Mascini">
+<meta name="dcterms.date" content="2024-01-15">
+<meta name="description" content="A step-by-step guide for creating a personal website with Quarto in VSCode and hosting it on GitHub Pages.">
 
-<title>blog_index – MinMaxed</title>
+<title>How to Make a Website with Quarto – MinMaxed</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,27 +29,25 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<script src="../site_libs/quarto-listing/list.min.js"></script>
-<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="../site_libs/cookie-consent/cookie-consent.js"></script>
-<link href="../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
-<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-630aa7aed19b34e3f1c420a16f036f79.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-a6f8c063ad837b37764dc2c1c1ddd639.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<script src="../../../site_libs/cookie-consent/cookie-consent.js"></script>
+<link href="../../../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-dark-630aa7aed19b34e3f1c420a16f036f79.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-a6f8c063ad837b37764dc2c1c1ddd639.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -74,35 +75,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-image','listing-date','listing-title','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=GTM-TJ454JG2"></script>
 
 <script type="text/plain" cookie-consent="tracking">
@@ -131,39 +103,10 @@ cookieconsent.run({
 </script> 
   
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="../styles.scss">
-<meta property="og:title" content="MinMaxed">
-<meta property="og:image" content="../xxx.png [Put in same sub-directory as blog post - or make folder within]">
+<link rel="stylesheet" href="../../../styles.scss">
+<meta property="og:title" content="How to Make a Website with Quarto – MinMaxed">
+<meta property="og:description" content="A step-by-step guide for creating a personal website with Quarto in VSCode and hosting it on GitHub Pages.">
 <meta property="og:site_name" content="MinMaxed">
 </head>
 
@@ -174,7 +117,7 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../../index.html">
     <span class="navbar-title">MinMaxed</span>
     </a>
   </div>
@@ -185,11 +128,11 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
+    <a class="nav-link" href="../../../index.html"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../blog/blog_index.html" aria-current="page"> 
+    <a class="nav-link" href="../../../blog/blog_index.html"> 
 <span class="menu-text">Blog</span></a>
   </li>  
 </ul>
@@ -212,90 +155,98 @@ window.Quarto = {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#foreword-introduction" id="toc-foreword-introduction" class="nav-link active" data-scroll-target="#foreword-introduction">Foreword &amp; Introduction</a></li>
+  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started">Getting Started</a>
+  <ul class="collapse">
+  <li><a href="#step-1" id="toc-step-1" class="nav-link" data-scroll-target="#step-1">Step 1</a></li>
+  </ul></li>
+  <li><a href="#references-helpful-links" id="toc-references-helpful-links" class="nav-link" data-scroll-target="#references-helpful-links">References &amp; Helpful Links</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
-<main class="content column-page" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><h1 class="title display-7">Welcome to my blog!</h1></header>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">How to Make a Website with Quarto</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Tutorial</div>
+    <div class="quarto-category">Quarto</div>
+    <div class="quarto-category">Website</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    A step-by-step guide for creating a personal website with Quarto in VSCode and hosting it on GitHub Pages.
+  </div>
+</div>
 
 
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Max Mascini </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 15, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
 
 
-<div class="index_banner">
-<section id="welcome-to-my-blog" class="level1 index">
+</header>
 
-<p>Take a look at some of my outdoor adventures, pet projects or tutorials :)</p>
-<p><br></p>
+
+<section id="foreword-introduction" class="level2">
+<h2 class="anchored" data-anchor-id="foreword-introduction">Foreword &amp; Introduction</h2>
+<p>In this blog post, I will show you how to get started making a website with Quarto in VSCode and hosting it through GitHub Pages!</p>
+<p>Throughout this tutorial I’ll assume that you have at least some knowledge of what Quarto is and how to use it. If that’s not the case and you feel lost — feel free to reach out to me through <a href="mailto:mascini.max@gmail.com">email</a> — or read the Quarto about/documentation <a href="https://quarto.org/">here</a>.</p>
+<details>
+<summary>
+GitHub Copilot Summarizes Quarto:
+</summary>
+<p>“Quarto is a powerful and flexible publishing system built on Pandoc. It allows you to create beautiful and meaningful documents, reports, presentations, and websites using a variety of languages including Markdown, R, Python, and others.</p>
+<p>Quarto documents are plain text files that can include code, equations, and visualizations. These documents can be converted into a wide range of output formats such as HTML, PDF, EPUB, and Word, among others.</p>
+<p>One of the key features of Quarto is its ability to execute embedded code chunks from multiple programming languages within the same document, similar to Jupyter notebooks or R Markdown documents. This makes it a great tool for literate programming and reproducible research.</p>
+In the context of creating websites, Quarto provides a simple yet powerful system for creating static websites from a collection of input documents. These websites can be easily hosted on platforms like GitHub Pages, making Quarto a good choice for creating personal websites, blogs, project documentation, and more.”
+</details>
 </section>
-</div>
+<section id="getting-started" class="level2">
+<h2 class="anchored" data-anchor-id="getting-started">Getting Started</h2>
+<p>The first portion of this tutorial essentially replicates the official Quarto <a href="https://quarto.org/docs/websites/">“Creating a Website” documentation</a> which also covers how to do this process using RStudio and Terminal — which isn’t covered here.</p>
+<section id="step-1" class="level3">
+<h3 class="anchored" data-anchor-id="step-1">Step 1</h3>
+<p>Make a new Quarto website project in VSCode via <strong>“&gt; Quarto: Create Project”</strong> and then selecting <strong>“Website Project”</strong> from the list.</p>
+<p>Next, it will ask you to create a directory — for use with GitHub Pages, name the directory <code>[Your Github Username].github.io</code>, for example mine is <code>MaxMascini.github.io</code>.</p>
+</section>
+</section>
+<section id="references-helpful-links" class="level2">
+<h2 class="anchored" data-anchor-id="references-helpful-links">References &amp; Helpful Links</h2>
+<p><strong>Quarto Documentation:</strong> - <a href="https://quarto.org/docs/websites/">General Quarto Website Documentation</a> - <a href="https://quarto.org/docs/reference/projects/websites.html">Website Options</a> - <a href="https://icons.getbootstrap.com/">Built-in Icon Options</a></p>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
-<div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-categories="VHV0b3JpYWwlMkNRdWFydG8lMkNXZWJzaXRl" data-listing-date-sort="NaN" data-listing-file-modified-sort="1774642303632" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="338">
-<a href="../blog/1.making-quarto-website/quarto-website-tut.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="../xxx.png [Put in same sub-directory as blog post - or make folder within]" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-How to Make a Website with Quarto
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('VHV0b3JpYWw='); return false;">Tutorial</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UXVhcnRv'); return false;">Quarto</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('V2Vic2l0ZQ=='); return false;">Website</div>
-
-</div>
-<div class="card-text listing-description delink">
-In this blog post, I will show you how to get started making a website with Quarto in VScode and hosting it through Github pages!
-</div>
-<div class="card-attribution card-text-small end">
-<div class="listing-date">
-Invalid Date
-</div>
-</div>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="1" data-categories="T3V0ZG9vcnMlMkNCYWNrcGFja2luZyUyQ0d1aWRl" data-listing-date-sort="1765411200000" data-listing-file-modified-sort="1774642303632" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="141">
-<a href="../blog/outdoors/east-coast-trail.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Backbacking the East Coast Trail
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('T3V0ZG9vcnM='); return false;">Outdoors</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('QmFja3BhY2tpbmc='); return false;">Backpacking</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('R3VpZGU='); return false;">Guide</div>
-
-</div>
-<div class="card-text listing-description delink">
-During July-August of 2024, my mother and I undertook a thru-hike of the East Coast Trail - a 360km trail that runs along avalon peninsula on the eastern coast of…
-</div>
-<div class="card-attribution card-text-small end">
-<div class="listing-date">
-11 December, 2025
-</div>
-</div>
-</div>
-</div></a>
-</div>
-</div>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -709,7 +660,7 @@ During July-August of 2024, my mother and I undertook a thru-hike of the East Co
     <div class="nav-footer-center">
       <ul class="footer-items list-unstyled">
     <li class="nav-item">
-    <a class="nav-link" href="../about_site.html">
+    <a class="nav-link" href="../../../about_site.html">
 <p>About Site</p>
 </a>
   </li>  
