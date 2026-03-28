@@ -24,13 +24,12 @@ import numpy as np
 GRID_W = 140
 GRID_H = 88
 
-# Bounds: peninsula sits upper-left, open Atlantic fills bottom-right.
-# North/west edges hug the mainland; south/east expanded into open ocean.
+# Bounds: peninsula sits upper-left with enough ocean context to be readable.
 BOUNDS = {
-    "latMin": 44.44,
+    "latMin": 44.50,
     "latMax": 44.76,
     "lonMin": -63.76,
-    "lonMax": -63.18,
+    "lonMax": -63.33,
 }
 
 # ── Download SRTM tile ─────────────────────────────────────

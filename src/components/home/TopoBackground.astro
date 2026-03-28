@@ -162,6 +162,17 @@
       }
     }
 
+    // Fill ocean cells (all 4 corners at ocean level) with a faint teal tint
+    ctx.fillStyle = 'rgba(44,154,183,0.09)';
+    for (let r = 0; r < RR - 1; r++) {
+      for (let c = 0; c < RC - 1; c++) {
+        if (grid[r][c] < -0.5 && grid[r][c+1] < -0.5 &&
+            grid[r+1][c] < -0.5 && grid[r+1][c+1] < -0.5) {
+          ctx.fillRect(c * cw, r * ch, cw + 0.5, ch + 0.5);
+        }
+      }
+    }
+
     // Land contours — range [0.02, 0.98] sits entirely over land values
     for (let i = 0; i <= N_CONTOURS; i++) {
       const level = 0.02 + (i / N_CONTOURS) * 0.96;
