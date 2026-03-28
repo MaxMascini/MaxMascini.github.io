@@ -1,30 +1,36 @@
 #!/usr/bin/env python3
 """
-Download SRTM elevation data for the Halifax peninsula from the AWS terrain
-tiles Skadi endpoint (public, no auth) and save as static JSON.
+Fetch NRCan HRDEM (LiDAR 1m) elevation data for Halifax via STAC + Cloud
+Optimized GeoTIFF. Only the Halifax window is downloaded from the remote COG —
+no multi-hundred-MB tile downloads needed.
 
-Run once: python3 scripts/fetch-halifax-elevation.py
-Output:   public/data/halifax-elevation.json
-
-Source: https://s3.amazonaws.com/elevation-tiles-prod/skadi/N44/N44W064.hgt.gz
-  - Raw SRTM 1-arc-second (30m), 1201x1201 int16 big-endian
-  - Ocean/harbour/NoData = -32768 → mapped to -1.0 (sparse contours)
-  - Land values normalised so peninsula topography spans [-1, 1]
+Dependencies: pip install rasterio
+Run:          python3 scripts/fetch-halifax-elevation.py
+Output:       public/data/halifax-elevation.json
 """
 
-import gzip
-import io
 import json
 import os
 import urllib.request
 
 import numpy as np
 
-# ── Grid config ───────────────────────────────────────────
+try:
+    import rasterio
+    from rasterio.crs import CRS
+    from rasterio.warp import transform_bounds
+    from rasterio.windows import from_bounds as window_from_bounds
+    from rasterio.enums import Resampling
+except ImportError:
+    raise SystemExit(
+        "\n  Missing dependency: pip install rasterio\n"
+    )
+
+# ── Output grid ─────────────────────────────────────────────────────────────
 GRID_W = 140
 GRID_H = 88
 
-# Bounds: peninsula sits upper-left with enough ocean context to be readable.
+# ── View bounds (WGS84) ──────────────────────────────────────────────────────
 BOUNDS = {
     "latMin": 44.50,
     "latMax": 44.76,
@@ -32,83 +38,113 @@ BOUNDS = {
     "lonMax": -63.33,
 }
 
-# ── Download SRTM tile ─────────────────────────────────────
-# Tile N44W064 covers 44–45°N, 63–64°W (Halifax sits inside this tile)
-URL = "https://s3.amazonaws.com/elevation-tiles-prod/skadi/N44/N44W064.hgt.gz"
+WGS84 = CRS.from_epsg(4326)
 
-print(f"Downloading SRTM tile from AWS…")
-print(f"  {URL}")
+# ── Step 1: Find the DTM COG URL via STAC ───────────────────────────────────
+print("Searching NRCan STAC for HRDEM 1m tile covering Halifax…")
 
-with urllib.request.urlopen(URL, timeout=60) as resp:
-    compressed = resp.read()
+stac_url = (
+    "https://datacube.services.geo.ca/stac/api/search"
+    "?collections=hrdem-mosaic-1m"
+    f"&bbox={BOUNDS['lonMin']},{BOUNDS['latMin']},{BOUNDS['lonMax']},{BOUNDS['latMax']}"
+    "&limit=5"
+)
 
-size_kb = len(compressed) / 1024
-print(f"  Downloaded {size_kb:.0f} KB")
+with urllib.request.urlopen(stac_url, timeout=30) as resp:
+    stac = json.loads(resp.read())
 
-# ── Decompress + parse ─────────────────────────────────────
-raw = gzip.decompress(compressed)
-# 1201×1201 int16 big-endian = 2,884,802 bytes
-arr = np.frombuffer(raw, dtype=">i2").reshape(3601, 3601).astype(float)
+features = stac.get("features", [])
+if not features:
+    raise SystemExit("No HRDEM items found for Halifax bounds — check STAC endpoint.")
 
-print(f"  Tile shape: {arr.shape}")
+# Collect unique DTM COG URLs (there may be multiple tiles)
+cog_urls = []
+for f in features:
+    href = f.get("assets", {}).get("dtm", {}).get("href")
+    if href and href not in cog_urls:
+        cog_urls.append(href)
 
-# ── Mask ocean/NoData ──────────────────────────────────────
-# SRTM void = -32768 (ocean, lakes, data gaps)
-arr[arr == -32768] = 0
+print(f"  Found {len(cog_urls)} tile(s): {[u.split('/')[-1] for u in cog_urls]}")
 
-# ── Crop to Halifax bounds ─────────────────────────────────
-# Tile covers exactly 44.0–45.0°N (row 0 = 45°N, row 1200 = 44°N)
-#                      -64.0 – -63.0°W (col 0 = -64°W, col 1200 = -63°W)
-def lat_to_row(lat):
-    return round((45.0 - lat) * 3600)   # SRTM1: 3600 samples per degree
+# ── Step 2: Windowed read from each COG, mosaic in memory ───────────────────
+print("Reading Halifax window from remote COG(s) (only this area is downloaded)…")
 
-def lon_to_col(lon):
-    return round((lon - (-64.0)) * 3600)
+# Accumulate weighted sum for averaging where tiles overlap
+acc   = np.zeros((GRID_H, GRID_W), dtype=np.float64)
+count = np.zeros((GRID_H, GRID_W), dtype=np.int32)
 
-row_min = lat_to_row(BOUNDS["latMax"])   # north edge → smaller row index
-row_max = lat_to_row(BOUNDS["latMin"])   # south edge → larger row index
-col_min = lon_to_col(BOUNDS["lonMin"])
-col_max = lon_to_col(BOUNDS["lonMax"])
+for cog_url in cog_urls:
+    print(f"  Opening: {cog_url.split('/')[-1]}")
+    with rasterio.open(cog_url) as src:
+        file_crs = src.crs
 
-cropped = arr[row_min:row_max + 1, col_min:col_max + 1]
-print(f"  Cropped shape: {cropped.shape} (rows {row_min}–{row_max}, cols {col_min}–{col_max})")
-print(f"  Elevation range in crop: {int(cropped.min())}m – {int(cropped.max())}m")
+        # Transform our WGS84 bounds into the file's native CRS
+        west, south, east, north = transform_bounds(
+            WGS84, file_crs,
+            BOUNDS["lonMin"], BOUNDS["latMin"],
+            BOUNDS["lonMax"], BOUNDS["latMax"],
+        )
 
-# ── Downsample to output grid ──────────────────────────────
-try:
-    from scipy.ndimage import zoom as scipy_zoom
-    scale_r = GRID_H / cropped.shape[0]
-    scale_c = GRID_W / cropped.shape[1]
-    grid = scipy_zoom(cropped, (scale_r, scale_c), order=1)
-    print(f"  Downsampled to {grid.shape} using scipy bilinear zoom")
-except ImportError:
-    # Fallback: simple nearest-neighbour slice (numpy only)
-    row_idx = [round(i * (cropped.shape[0] - 1) / (GRID_H - 1)) for i in range(GRID_H)]
-    col_idx = [round(i * (cropped.shape[1] - 1) / (GRID_W - 1)) for i in range(GRID_W)]
-    grid = cropped[np.ix_(row_idx, col_idx)]
-    print(f"  Downsampled to {grid.shape} using index slicing (scipy not available)")
+        # Build a window for this bounding box
+        window = window_from_bounds(west, south, east, north, transform=src.transform)
 
-# ── Normalise ──────────────────────────────────────────────
-# Ocean/water cells (raw value <= 0) → -1.0
-# Land cells (raw value > 0) → normalised to [0, 1]
-# The large gap between ocean (-1.0) and land ([0, 1]) means the renderer
-# can draw contours only over land (levels 0.02–0.98) and the ocean area
-# stays completely blank — no contour lines along the coastline.
-land_mask = grid > 0
-if land_mask.any():
-    vmin = grid[land_mask].min()
-    vmax = grid[land_mask].max()
-    norm_grid = np.where(land_mask, (grid - vmin) / (vmax - vmin), -1.0)
-else:
-    norm_grid = np.full_like(grid, -1.0)
+        # Clamp window to the file extent (tile may not cover full bbox)
+        window = window.intersection(
+            rasterio.windows.Window(0, 0, src.width, src.height)
+        )
+        if window.width <= 0 or window.height <= 0:
+            print("    (no overlap — skipping)")
+            continue
+
+        # Read at target resolution using bilinear resampling
+        tile_data = src.read(
+            1,
+            window=window,
+            out_shape=(GRID_H, GRID_W),
+            resampling=Resampling.bilinear,
+        ).astype(np.float64)
+
+        nodata = src.nodata
+        print(f"    NoData value: {nodata}")
+
+    # Mask NoData
+    if nodata is not None:
+        valid = tile_data != nodata
+    else:
+        valid = np.isfinite(tile_data)
+
+    acc[valid]   += tile_data[valid]
+    count[valid] += 1
+
+if count.max() == 0:
+    raise SystemExit("No data read — tiles may not cover Halifax bounds.")
+
+# Average where tiles overlap; 0 where no coverage (treated as ocean/NoData)
+grid = np.divide(acc, count, out=np.zeros_like(acc), where=count > 0)
+
+print(f"  Raw elevation range: {grid[count>0].min():.1f}m – {grid[count>0].max():.1f}m")
+print(f"  Coverage: {(count>0).sum()} / {count.size} cells ({(count>0).mean()*100:.0f}%)")
+
+# ── Step 3: Normalise ────────────────────────────────────────────────────────
+# Ocean/water cells (no data, elevation ≤ 0) → -1.0
+# Land cells (elevation > 0) → normalised to [0, 1]
+# Large gap between ocean (-1.0) and land ([0,1]) means the renderer can draw
+# contours only over land and leave ocean completely blank.
+land_mask = (count > 0) & (grid > 0)
+
+if not land_mask.any():
+    raise SystemExit("No land cells found — check bounds or data coverage.")
+
+vmin = grid[land_mask].min()
+vmax = grid[land_mask].max()
+norm = np.where(land_mask, (grid - vmin) / (vmax - vmin), -1.0)
 
 print(f"  Land cells: {land_mask.sum()} / {land_mask.size} ({land_mask.mean()*100:.0f}%)")
-print(f"  Ocean cells set to -1.0 (below all contour levels)")
+print(f"  Ocean cells → -1.0")
 
-# Flatten to row-major list, round to 2 dp
-flat = [round(float(v), 2) for v in norm_grid.flatten()]
+flat = [round(float(v), 2) for v in norm.flatten()]
 
-# ── Write JSON ─────────────────────────────────────────────
+# ── Step 4: Write JSON ───────────────────────────────────────────────────────
 out = {
     "grid_w": GRID_W,
     "grid_h": GRID_H,
@@ -116,18 +152,17 @@ out = {
     "elevation": flat,
 }
 
-out_path = os.path.join(os.path.dirname(__file__), "..", "public", "data", "halifax-elevation.json")
-out_path = os.path.normpath(out_path)
-
+out_path = os.path.normpath(
+    os.path.join(os.path.dirname(__file__), "..", "public", "data", "halifax-elevation.json")
+)
 os.makedirs(os.path.dirname(out_path), exist_ok=True)
 with open(out_path, "w") as f:
     json.dump(out, f, separators=(",", ":"))
 
-size_out_kb = os.path.getsize(out_path) / 1024
-print(f"\n✓ Written to {out_path} ({size_out_kb:.1f} KB)")
+print(f"\n✓ Written to {out_path} ({os.path.getsize(out_path)/1024:.1f} KB)")
 
-# ── ASCII preview ──────────────────────────────────────────
-print("\nASCII preview (every other col):")
+# ── ASCII preview ────────────────────────────────────────────────────────────
+print("\nASCII preview (every other column):")
 for r in range(GRID_H):
     row = flat[r * GRID_W:(r + 1) * GRID_W]
     print("".join(
