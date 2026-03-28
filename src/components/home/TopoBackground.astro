@@ -118,7 +118,7 @@
   }
 
   // ── Render constants ────────────────────────────────────
-  const RC = 110, RR = 68;   // render grid resolution
+  const RC = 200, RR = 125;  // render grid resolution
   const N_CONTOURS = 20;
 
   // ── Main loop ───────────────────────────────────────────
@@ -150,12 +150,12 @@
         const fr = (r / (RR - 1)) * (GRID_H - 1);
         let v = sampleElev(fc, fr);
 
-        // Raise a peak under the cursor
+        // Raise a subtle peak under the cursor
         if (mx > 0) {
           const px = c * cw, py = r * ch;
           const dist = Math.sqrt((px - mx) ** 2 + (py - my) ** 2);
-          const inf = Math.max(0, 1 - dist / (W * 0.17));
-          v += inf * inf * 1.9;
+          const inf = Math.max(0, 1 - dist / (W * 0.06));
+          v += inf * inf * 0.6;
         }
 
         grid[r][c] = v;

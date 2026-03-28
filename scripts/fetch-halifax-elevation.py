@@ -21,8 +21,8 @@ import urllib.request
 import numpy as np
 
 # ── Grid config ───────────────────────────────────────────
-GRID_W = 80
-GRID_H = 50
+GRID_W = 140
+GRID_H = 88
 
 # Bounds: tightly framed on the Halifax peninsula.
 # North includes Bedford Basin; south is below Point Pleasant;
