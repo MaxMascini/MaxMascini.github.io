@@ -21,16 +21,17 @@ import urllib.request
 import numpy as np
 
 # ── Grid config ───────────────────────────────────────────
-GRID_W = 60
-GRID_H = 38
+GRID_W = 80
+GRID_H = 50
 
-# Bounds: full Halifax peninsula — south tip to Bedford Basin,
-# NW Arm visible to the west, Dartmouth hillside to the east
+# Bounds: tightly framed on the Halifax peninsula.
+# North includes Bedford Basin; south is below Point Pleasant;
+# west clears the NW Arm; east shows Dartmouth across the harbour.
 BOUNDS = {
-    "latMin": 44.52,
-    "latMax": 44.80,
-    "lonMin": -63.82,
-    "lonMax": -63.39,
+    "latMin": 44.57,
+    "latMax": 44.75,
+    "lonMin": -63.74,
+    "lonMax": -63.43,
 }
 
 # ── Download SRTM tile ─────────────────────────────────────
@@ -90,13 +91,16 @@ except ImportError:
     print(f"  Downsampled to {grid.shape} using index slicing (scipy not available)")
 
 # ── Normalise ──────────────────────────────────────────────
-# Ocean/water cells (value <= 0) → -1.0 (below all contour levels, draws no lines)
-# Land cells (value > 0) → normalised to (-1, 1]
+# Ocean/water cells (raw value <= 0) → -1.0
+# Land cells (raw value > 0) → normalised to [0, 1]
+# The large gap between ocean (-1.0) and land ([0, 1]) means the renderer
+# can draw contours only over land (levels 0.02–0.98) and the ocean area
+# stays completely blank — no contour lines along the coastline.
 land_mask = grid > 0
 if land_mask.any():
     vmin = grid[land_mask].min()
     vmax = grid[land_mask].max()
-    norm_grid = np.where(land_mask, (grid - vmin) / (vmax - vmin) * 2 - 1, -1.0)
+    norm_grid = np.where(land_mask, (grid - vmin) / (vmax - vmin), -1.0)
 else:
     norm_grid = np.full_like(grid, -1.0)
 

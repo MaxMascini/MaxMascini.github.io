@@ -118,7 +118,7 @@
   }
 
   // ── Render constants ────────────────────────────────────
-  const RC = 90, RR = 56;   // render grid resolution
+  const RC = 110, RR = 68;   // render grid resolution
   const N_CONTOURS = 20;
 
   // ── Main loop ───────────────────────────────────────────
@@ -162,12 +162,13 @@
       }
     }
 
-    // Draw contour levels
+    // Draw contour levels — range [0.02, 0.98] sits entirely over land values
+    // (ocean is at -1.0, so no contour lines ever fire along the coastline)
     for (let i = 0; i <= N_CONTOURS; i++) {
-      const level = -1 + (i / N_CONTOURS) * 2;
-      const isIndex = i % 4 === 0;
-      ctx.strokeStyle = `rgba(76,175,130,${isIndex ? 0.48 : 0.18})`;
-      ctx.lineWidth   = isIndex ? 0.9 : 0.5;
+      const level = 0.02 + (i / N_CONTOURS) * 0.96;
+      const isIndex = i % 5 === 0;
+      ctx.strokeStyle = `rgba(76,175,130,${isIndex ? 0.52 : 0.20})`;
+      ctx.lineWidth   = isIndex ? 1.0 : 0.5;
       ctx.lineJoin    = 'round';
       ctx.lineCap     = 'round';
       march(grid, RC, RR, cw, ch, level);
