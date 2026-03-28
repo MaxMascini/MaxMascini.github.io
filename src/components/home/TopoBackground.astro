@@ -162,14 +162,6 @@
       }
     }
 
-    // Coastline: single contour at -0.5 (midpoint between ocean=-1.0 and land≥0)
-    // traces every ocean/land boundary as one clean line
-    ctx.strokeStyle = 'rgba(76,175,130,0.55)';
-    ctx.lineWidth   = 1.1;
-    ctx.lineJoin    = 'round';
-    ctx.lineCap     = 'round';
-    march(grid, RC, RR, cw, ch, -0.5);
-
     // Land contours — range [0.02, 0.98] sits entirely over land values
     for (let i = 0; i <= N_CONTOURS; i++) {
       const level = 0.02 + (i / N_CONTOURS) * 0.96;

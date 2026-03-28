@@ -24,14 +24,13 @@ import numpy as np
 GRID_W = 140
 GRID_H = 88
 
-# Bounds: tightly framed on the Halifax peninsula.
-# North includes Bedford Basin; south is below Point Pleasant;
-# west clears the NW Arm; east shows Dartmouth across the harbour.
+# Bounds: peninsula sits upper-left, open Atlantic fills bottom-right.
+# North/west edges hug the mainland; south/east expanded into open ocean.
 BOUNDS = {
-    "latMin": 44.57,
-    "latMax": 44.75,
-    "lonMin": -63.74,
-    "lonMax": -63.43,
+    "latMin": 44.44,
+    "latMax": 44.76,
+    "lonMin": -63.76,
+    "lonMax": -63.18,
 }
 
 # ── Download SRTM tile ─────────────────────────────────────
