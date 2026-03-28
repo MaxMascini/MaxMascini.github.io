@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """
-Fetch NRCan HRDEM (LiDAR 1m) elevation data for Halifax via STAC + Cloud
-Optimized GeoTIFF. Only the Halifax window is downloaded from the remote COG —
-no multi-hundred-MB tile downloads needed.
+Fetch NRCan HRDEM (LiDAR 1m) elevation data for Halifax.
+
+Priority:
+  1. Local GeoTIFF at scripts/halifax-hrdem.tif  (drop file here to use it)
+  2. Remote COG via NRCan STAC API               (fallback, no download needed)
 
 Dependencies: pip install rasterio
 Run:          python3 scripts/fetch-halifax-elevation.py
@@ -40,63 +42,39 @@ BOUNDS = {
 
 WGS84 = CRS.from_epsg(4326)
 
-# ── Step 1: Find the DTM COG URL via STAC ───────────────────────────────────
-print("Searching NRCan STAC for HRDEM 1m tile covering Halifax…")
+LOCAL_TIFF = os.path.join(os.path.dirname(__file__), "halifax-hrdem.tif")
 
-stac_url = (
-    "https://datacube.services.geo.ca/stac/api/search"
-    "?collections=hrdem-mosaic-1m"
-    f"&bbox={BOUNDS['lonMin']},{BOUNDS['latMin']},{BOUNDS['lonMax']},{BOUNDS['latMax']}"
-    "&limit=5"
-)
-
-with urllib.request.urlopen(stac_url, timeout=30) as resp:
-    stac = json.loads(resp.read())
-
-features = stac.get("features", [])
-if not features:
-    raise SystemExit("No HRDEM items found for Halifax bounds — check STAC endpoint.")
-
-# Collect unique DTM COG URLs (there may be multiple tiles)
-cog_urls = []
-for f in features:
-    href = f.get("assets", {}).get("dtm", {}).get("href")
-    if href and href not in cog_urls:
-        cog_urls.append(href)
-
-print(f"  Found {len(cog_urls)} tile(s): {[u.split('/')[-1] for u in cog_urls]}")
-
-# ── Step 2: Windowed read from each COG, mosaic in memory ───────────────────
-print("Reading Halifax window from remote COG(s) (only this area is downloaded)…")
-
-# Accumulate weighted sum for averaging where tiles overlap
+# ── Accumulator (used by both paths) ─────────────────────────────────────────
 acc   = np.zeros((GRID_H, GRID_W), dtype=np.float64)
 count = np.zeros((GRID_H, GRID_W), dtype=np.int32)
 
-for cog_url in cog_urls:
-    print(f"  Opening: {cog_url.split('/')[-1]}")
-    with rasterio.open(cog_url) as src:
+
+def read_tiff(path_or_url: str) -> None:
+    """Windowed-read one GeoTIFF (local or remote COG) into acc/count."""
+    print(f"  Opening: {os.path.basename(path_or_url)}")
+    with rasterio.open(path_or_url) as src:
         file_crs = src.crs
 
-        # Transform our WGS84 bounds into the file's native CRS
-        west, south, east, north = transform_bounds(
-            WGS84, file_crs,
-            BOUNDS["lonMin"], BOUNDS["latMin"],
-            BOUNDS["lonMax"], BOUNDS["latMax"],
-        )
+        if file_crs == WGS84 or file_crs.to_epsg() == 4326:
+            west, south, east, north = (
+                BOUNDS["lonMin"], BOUNDS["latMin"],
+                BOUNDS["lonMax"], BOUNDS["latMax"],
+            )
+        else:
+            west, south, east, north = transform_bounds(
+                WGS84, file_crs,
+                BOUNDS["lonMin"], BOUNDS["latMin"],
+                BOUNDS["lonMax"], BOUNDS["latMax"],
+            )
 
-        # Build a window for this bounding box
         window = window_from_bounds(west, south, east, north, transform=src.transform)
-
-        # Clamp window to the file extent (tile may not cover full bbox)
         window = window.intersection(
             rasterio.windows.Window(0, 0, src.width, src.height)
         )
         if window.width <= 0 or window.height <= 0:
             print("    (no overlap — skipping)")
-            continue
+            return
 
-        # Read at target resolution using bilinear resampling
         tile_data = src.read(
             1,
             window=window,
@@ -105,21 +83,51 @@ for cog_url in cog_urls:
         ).astype(np.float64)
 
         nodata = src.nodata
-        print(f"    NoData value: {nodata}")
+        print(f"    NoData value: {nodata}  |  CRS: {file_crs.to_epsg()}")
 
-    # Mask NoData
+    # For local file with no NoData tag, zeros are ocean (no LiDAR return)
     if nodata is not None:
         valid = tile_data != nodata
     else:
-        valid = np.isfinite(tile_data)
+        valid = (tile_data != 0) & np.isfinite(tile_data)
 
     acc[valid]   += tile_data[valid]
     count[valid] += 1
 
-if count.max() == 0:
-    raise SystemExit("No data read — tiles may not cover Halifax bounds.")
 
-# Average where tiles overlap; 0 where no coverage (treated as ocean/NoData)
+# ── Step 1 & 2: Load data ─────────────────────────────────────────────────────
+if os.path.exists(LOCAL_TIFF):
+    print(f"Using local GeoTIFF: {LOCAL_TIFF}")
+    read_tiff(LOCAL_TIFF)
+else:
+    print("Local file not found — querying NRCan STAC for remote COG…")
+    stac_url = (
+        "https://datacube.services.geo.ca/stac/api/search"
+        "?collections=hrdem-mosaic-1m"
+        f"&bbox={BOUNDS['lonMin']},{BOUNDS['latMin']},{BOUNDS['lonMax']},{BOUNDS['latMax']}"
+        "&limit=5"
+    )
+    with urllib.request.urlopen(stac_url, timeout=30) as resp:
+        stac = json.loads(resp.read())
+
+    features = stac.get("features", [])
+    if not features:
+        raise SystemExit("No HRDEM items found for Halifax bounds — check STAC endpoint.")
+
+    cog_urls = []
+    for f in features:
+        href = f.get("assets", {}).get("dtm", {}).get("href")
+        if href and href not in cog_urls:
+            cog_urls.append(href)
+
+    print(f"  Found {len(cog_urls)} tile(s): {[u.split('/')[-1] for u in cog_urls]}")
+    for cog_url in cog_urls:
+        read_tiff(cog_url)
+
+if count.max() == 0:
+    raise SystemExit("No data read — file may not cover Halifax bounds.")
+
+# Average where tiles overlap; 0 where no coverage (ocean)
 grid = np.divide(acc, count, out=np.zeros_like(acc), where=count > 0)
 
 print(f"  Raw elevation range: {grid[count>0].min():.1f}m – {grid[count>0].max():.1f}m")
