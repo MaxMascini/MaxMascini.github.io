@@ -49,7 +49,7 @@ print(f"  Downloaded {size_kb:.0f} KB")
 # ── Decompress + parse ─────────────────────────────────────
 raw = gzip.decompress(compressed)
 # 1201×1201 int16 big-endian = 2,884,802 bytes
-arr = np.frombuffer(raw, dtype=">i2").reshape(1201, 1201).astype(float)
+arr = np.frombuffer(raw, dtype=">i2").reshape(3601, 3601).astype(float)
 
 print(f"  Tile shape: {arr.shape}")
 
@@ -61,10 +61,10 @@ arr[arr == -32768] = 0
 # Tile covers exactly 44.0–45.0°N (row 0 = 45°N, row 1200 = 44°N)
 #                      -64.0 – -63.0°W (col 0 = -64°W, col 1200 = -63°W)
 def lat_to_row(lat):
-    return round((45.0 - lat) * 1200)
+    return round((45.0 - lat) * 3600)   # SRTM1: 3600 samples per degree
 
 def lon_to_col(lon):
-    return round((lon - (-64.0)) * 1200)
+    return round((lon - (-64.0)) * 3600)
 
 row_min = lat_to_row(BOUNDS["latMax"])   # north edge → smaller row index
 row_max = lat_to_row(BOUNDS["latMin"])   # south edge → larger row index
@@ -76,23 +76,22 @@ print(f"  Cropped shape: {cropped.shape} (rows {row_min}–{row_max}, cols {col_
 print(f"  Elevation range in crop: {int(cropped.min())}m – {int(cropped.max())}m")
 
 # ── Downsample to output grid ──────────────────────────────
-from scipy.ndimage import zoom as scipy_zoom
-
 try:
+    from scipy.ndimage import zoom as scipy_zoom
     scale_r = GRID_H / cropped.shape[0]
     scale_c = GRID_W / cropped.shape[1]
     grid = scipy_zoom(cropped, (scale_r, scale_c), order=1)
     print(f"  Downsampled to {grid.shape} using scipy bilinear zoom")
 except ImportError:
-    # Fallback: simple slice if scipy not available
+    # Fallback: simple nearest-neighbour slice (numpy only)
     row_idx = [round(i * (cropped.shape[0] - 1) / (GRID_H - 1)) for i in range(GRID_H)]
     col_idx = [round(i * (cropped.shape[1] - 1) / (GRID_W - 1)) for i in range(GRID_W)]
     grid = cropped[np.ix_(row_idx, col_idx)]
     print(f"  Downsampled to {grid.shape} using index slicing (scipy not available)")
 
 # ── Normalise ──────────────────────────────────────────────
-# Ocean cells (0) → -1.0 so they sit below all contour levels
-# Land cells → normalised across the actual land elevation range, mapped to (-1, 1]
+# Ocean/water cells (value <= 0) → -1.0 (below all contour levels, draws no lines)
+# Land cells (value > 0) → normalised to (-1, 1]
 land_mask = grid > 0
 if land_mask.any():
     vmin = grid[land_mask].min()
